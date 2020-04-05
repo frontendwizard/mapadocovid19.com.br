@@ -1,0 +1,17 @@
+{
+	"extends": [
+		"standard",
+		"plugin:react/recommended",
+		"prettier",
+		"prettier/react"
+	],
+	"plugins": ["react"],
+	"ecmaFeatures": {
+		"jsx": true,
+		"modules": true
+	},
+	"rules": {
+		"react/react-in-jsx-scope": "off",
+		"react/prop-types": "off"
+	}
+}
