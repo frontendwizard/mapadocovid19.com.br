@@ -1,203 +1,150 @@
-import Head from 'next/head'
+import Head from "next/head"
+import { Mercator } from "@vx/geo"
+import { scaleLinear } from "@vx/scale"
+import { ParentSize } from "@vx/responsive"
+import * as topojson from "topojson"
+import { Stack, Heading, Text, Box } from "@chakra-ui/core"
+import styled from "@emotion/styled"
+import { css } from "@emotion/core"
+import fetch from "isomorphic-fetch"
+import topology from "../utils/simpleTopology.json"
 
-const Home = () => (
-  <div className="container">
-    <Head>
-      <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const selectedStyles = (props) =>
+  props.variant === "selected" &&
+  css`
+    stroke: red;
+    stroke-width: 2;
+  `
+const State = styled.path`
+  stroke: black;
+  stroke-width: 0.5;
+  cursor: pointer;
+  ${selectedStyles}
+`
 
-    <main>
-      <h1 className="title">
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
-
-      <p className="description">
-        Get started by editing <code>pages/index.js</code>
-      </p>
-
-      <div className="grid">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Learn &rarr;</h3>
-          <p>Learn about Next.js in an interactive course with quizzes!</p>
-        </a>
-
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Discover and deploy boilerplate example Next.js projects.</p>
-        </a>
-
-        <a
-          href="https://zeit.co/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          className="card"
-        >
-          <h3>Deploy &rarr;</h3>
-          <p>
-            Instantly deploy your Next.js site to a public URL with ZEIT Now.
-          </p>
-        </a>
-      </div>
-    </main>
-
-    <footer>
-      <a
-        href="https://zeit.co?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by <img src="/zeit.svg" alt="ZEIT Logo" />
-      </a>
-    </footer>
-
-    <style jsx>{`
-      .container {
-        min-height: 100vh;
-        padding: 0 0.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      main {
-        padding: 5rem 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer {
-        width: 100%;
-        height: 100px;
-        border-top: 1px solid #eaeaea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer img {
-        margin-left: 0.5rem;
-      }
-
-      footer a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .title a {
-        color: #0070f3;
-        text-decoration: none;
-      }
-
-      .title a:hover,
-      .title a:focus,
-      .title a:active {
-        text-decoration: underline;
-      }
-
-      .title {
-        margin: 0;
-        line-height: 1.15;
-        font-size: 4rem;
-      }
-
-      .title,
-      .description {
-        text-align: center;
-      }
-
-      .description {
-        line-height: 1.5;
-        font-size: 1.5rem;
-      }
-
-      code {
-        background: #fafafa;
-        border-radius: 5px;
-        padding: 0.75rem;
-        font-size: 1.1rem;
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-          DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-      }
-
-      .grid {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-
-        max-width: 800px;
-        margin-top: 3rem;
-      }
-
-      .card {
-        margin: 1rem;
-        flex-basis: 45%;
-        padding: 1.5rem;
-        text-align: left;
-        color: inherit;
-        text-decoration: none;
-        border: 1px solid #eaeaea;
-        border-radius: 10px;
-        transition: color 0.15s ease, border-color 0.15s ease;
-      }
-
-      .card:hover,
-      .card:focus,
-      .card:active {
-        color: #0070f3;
-        border-color: #0070f3;
-      }
-
-      .card h3 {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-      }
-
-      .card p {
-        margin: 0;
-        font-size: 1.25rem;
-        line-height: 1.5;
-      }
-
-      @media (max-width: 600px) {
-        .grid {
-          width: 100%;
-          flex-direction: column;
-        }
-      }
-    `}</style>
-
-    <style jsx global>{`
-      html,
-      body {
-        padding: 0;
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-    `}</style>
-  </div>
+const InfoCard = ({ label, value, color, ...rest }) => (
+  <Box bg={`${color}.100`} p={4} rounded='md' shadow='sm' {...rest}>
+    <Heading as='h2' fontSize='xs' m={0} color={`${color}.600`}>
+      {label}
+    </Heading>
+    <Text fontSize='2xl' fontWeight='bold' m={0} color={`${color}.500`}>
+      {value}
+    </Text>
+  </Box>
 )
+
+const BrazilResults = ({ results }) => (
+  <Box>
+    <Heading fontSize='lg'>Total no Brasil:</Heading>
+    <Stack isInline spacing={8}>
+      <InfoCard
+        color='red'
+        value={results.reduce((acc, current) => acc + current.confirmed, 0)}
+        label='CONFIRMADOS'
+      />
+      <InfoCard
+        color='gray'
+        value={results.reduce((acc, current) => acc + current.deaths, 0)}
+        label='MORTES'
+      />
+    </Stack>
+  </Box>
+)
+
+const StateResult = ({ result }) => (
+  <Box>
+    <Heading fontSize='lg'>Total em {result.state}:</Heading>
+    <Stack isInline spacing={8}>
+      <InfoCard color='red' value={result.confirmed} label='CONFIRMADOS' />
+      <InfoCard color='gray' value={result.deaths} label='MORTES' />
+    </Stack>
+  </Box>
+)
+
+const Home = ({ results }) => {
+  const [selectedState, setSelectedState] = React.useState(null)
+  const world = topojson.feature(topology, topology.objects.states)
+  const outline = topojson.mesh(topology, topology.objects.states)
+  const colorScale = scaleLinear({
+    domain: [0, Math.max(...results.map((r) => r.confirmed))],
+    range: ["white", "red"],
+  })
+  return (
+    <div className='container'>
+      <Head>
+        <title>Mapa do COVID-19 no Brasil</title>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <Box
+        as='main'
+        padding={4}
+        width={["100%", 3 / 4, "700px"]}
+        margin={[0, "auto"]}
+      >
+        <Heading as='h1' fontSize='2xl' mt={0}>
+          COVID-19 no Brasil
+        </Heading>
+        <Text fontSize='xl'>Selecione um estado para mais detalhes</Text>
+        {!selectedState ? (
+          <BrazilResults results={results} />
+        ) : (
+          <StateResult
+            result={results.find((r) => r.state === selectedState)}
+          />
+        )}
+        <Box height={[350, 475, 600]} mt={8}>
+          <ParentSize>
+            {({ width: w, height: h }) => (
+              <svg width={w} height={h}>
+                <Mercator data={world.features} fitSize={[[w, h], outline]}>
+                  {(mercator) => {
+                    return (
+                      <g>
+                        {mercator.features.map(({ feature: f }) => (
+                          <State
+                            fill={colorScale(
+                              results.find((r) => r.state === f.id).confirmed
+                            )}
+                            key={f.id}
+                            d={mercator.path(f)}
+                            onClick={() => setSelectedState(f.id)}
+                          />
+                        ))}
+                        {selectedState && (
+                          <State
+                            fill={colorScale(
+                              results.find((r) => r.state === selectedState)
+                                .confirmed
+                            )}
+                            d={mercator.path(
+                              mercator.features.find(
+                                (f) => f.feature.id === selectedState
+                              ).feature
+                            )}
+                            variant='selected'
+                          />
+                        )}
+                      </g>
+                    )
+                  }}
+                </Mercator>
+              </svg>
+            )}
+          </ParentSize>
+        </Box>
+      </Box>
+    </div>
+  )
+}
+
+export async function getStaticProps() {
+  const res = await fetch(
+    `https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state`
+  )
+  const { results } = await res.json()
+  return {
+    props: { results },
+  }
+}
 
 export default Home

@@ -8,8 +8,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/core": "^0.7.0",
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "@vx/geo": "^0.0.195",
+    "@vx/responsive": "^0.0.195",
+    "@vx/scale": "^0.0.195",
+    "emotion-theming": "^10.0.27",
+    "isomorphic-fetch": "^2.2.1",
     "next": "9.3.4",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-use": "^14.0.0",
+    "topojson": "^3.0.2"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.2"
   }
 }
