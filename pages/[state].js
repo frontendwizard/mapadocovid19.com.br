@@ -8,10 +8,12 @@ import { Heading, Text, Box } from "@chakra-ui/core"
 import MapBrazil from "../components/MapBrazil"
 import DataTable from "../components/DataTable"
 import StateTotalResults from "../components/StateTotalResults"
+import LastUpdateInfo from "../components/LastUpdateInfo"
+import Footer from "../components/Footer"
 
 import municipalities from "../utils/municipalities.json"
 
-const Post = ({ states, cities, history }) => {
+const Post = ({ states, cities, history, lastUpdate }) => {
 	const router = useRouter()
 	const { state: stateParam } = router.query
 	const [county, setCounty] = useState(stateParam)
@@ -61,11 +63,7 @@ const Post = ({ states, cities, history }) => {
 					onStateSelection={(state) => setCounty(state)}
 					cities={cities}
 				/>
-				<Text fontSize="m" color="green.500" textAlign="end">
-					Última atualização:
-					<br />
-					<span style={{ fontWeight: "bold" }}>{history[0].date}</span>
-				</Text>
+				<LastUpdateInfo lastUpdate={lastUpdate} />
 				<StateTotalResults result={history[0]} />
 				<Text fontSize="lg" color="gray.500" mt={6}>
 					Dados por cidade:
@@ -74,6 +72,7 @@ const Post = ({ states, cities, history }) => {
 					columns={columns}
 					data={cities.filter((c) => c.state === county)}
 				/>
+				<Footer />
 			</Box>
 		</div>
 	)
@@ -100,8 +99,11 @@ export async function getStaticProps({ params: { state } }) {
 	const { results: history } = await fetch(
 		`https://brasil.io/api/dataset/covid19/caso/data?place_type=state&state=${state}`
 	).then((data) => data.json())
+	const { tables } = await fetch(
+		`https://brasil.io/api/dataset/covid19`
+	).then((r) => r.json())
 	return {
-		props: { states, cities, history },
+		props: { states, cities, history, lastUpdate: tables[1].import_date },
 	}
 }
 
