@@ -1,10 +1,12 @@
-import { useState } from "react"
+/* eslint-disable camelcase */
+import { useMemo, useState } from "react"
 import { useRouter } from "next/router"
 import fetch from "isomorphic-fetch"
 import Head from "next/head"
 import { Heading, Text, Box } from "@chakra-ui/core"
 
 import MapBrazil from "../components/MapBrazil"
+import DataTable from "../components/DataTable"
 import StateTotalResults from "../components/StateTotalResults"
 
 import municipalities from "../utils/municipalities.json"
@@ -13,6 +15,27 @@ const Post = ({ states, cities, history }) => {
 	const router = useRouter()
 	const { state: stateParam } = router.query
 	const [county, setCounty] = useState(stateParam)
+	const columns = useMemo(
+		() => [
+			{ Header: "cidade", accessor: "city" },
+			{ Header: "casos", accessor: "confirmed" },
+			{ Header: "mortes", accessor: "deaths" },
+			{
+				Header: "mortalidade",
+				accessor: ({ death_rate }) =>
+					death_rate ? `${Math.round(death_rate * 1000) / 10}%` : "0%",
+				id: "death_rate",
+			},
+			{
+				Header: "população",
+				id: "estimated_population_2019",
+				// eslint-disable-next-line react/display-name
+				accessor: ({ estimated_population_2019 }) =>
+					estimated_population_2019.toLocaleString(),
+			},
+		],
+		[]
+	)
 
 	return (
 		<div className="container">
@@ -38,7 +61,19 @@ const Post = ({ states, cities, history }) => {
 					onStateSelection={(state) => setCounty(state)}
 					cities={cities}
 				/>
+				<Text fontSize="m" color="green.500" textAlign="end">
+					Última atualização:
+					<br />
+					<span style={{ fontWeight: "bold" }}>{history[0].date}</span>
+				</Text>
 				<StateTotalResults result={history[0]} />
+				<Text fontSize="lg" color="gray.500" mt={6}>
+					Dados por cidade:
+				</Text>
+				<DataTable
+					columns={columns}
+					data={cities.filter((c) => c.state === county)}
+				/>
 			</Box>
 		</div>
 	)
@@ -51,7 +86,7 @@ export async function getStaticProps({ params: { state } }) {
 		`https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state`
 	).then((data) => data.json())
 	const { results } = await fetch(
-		`https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=city&state=${state}`
+		`https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=city`
 	).then((data) => data.json())
 	const cities = results
 		// eslint-disable-next-line camelcase

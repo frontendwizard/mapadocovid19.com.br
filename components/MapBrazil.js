@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Mercator } from "@vx/geo"
 import { ParentSize } from "@vx/responsive"
-import { scaleLinear, scaleQuantize } from "@vx/scale"
+import { scaleLinear } from "@vx/scale"
 import * as topojson from "topojson"
 import { Box } from "@chakra-ui/core"
 import styled from "@emotion/styled"
@@ -38,9 +38,7 @@ const Cities = ({ cities, projection }) => {
 						cy={position[1]}
 						r={radiusScale(city.confirmed)}
 						fill="red"
-						stroke="#000"
-						strokeWidth={0.5}
-						opacity={0.5}
+						opacity={0.35}
 					/>
 				)
 			})}
@@ -87,9 +85,14 @@ const MapBrazil = ({
 										{mercator.features.map(({ feature: f }) => (
 											<Link key={f.id} href="/[state]" as={`/${f.id}`}>
 												<State
-													fill={colorScale(
-														results.find((r) => r.state === f.id).confirmed
-													)}
+													fill={
+														selectedState
+															? "white"
+															: colorScale(
+																	results.find((r) => r.state === f.id)
+																		.confirmed
+															  )
+													}
 													d={mercator.path(f)}
 													onClick={() => onStateSelection(f.id)}
 												/>
@@ -97,7 +100,7 @@ const MapBrazil = ({
 										))}
 										{selectedState && (
 											<g>
-												<Link href="/" as="/">
+												<Link href="/" replace>
 													<State
 														fill={colorScale(
 															results.find((r) => r.state === selectedState)
