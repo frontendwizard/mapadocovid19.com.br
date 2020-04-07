@@ -7,8 +7,7 @@ const InfoCard = ({ label, value, color, ...rest }) => (
 		justify="center"
 		bg={`${color}.100`}
 		rounded="md"
-		shadow="sm"
-		p={4}
+		p={3}
 		{...rest}
 	>
 		<Heading as="h2" fontSize="xs" m={0} color={`${color}.600`}>
