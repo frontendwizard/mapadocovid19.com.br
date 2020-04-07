@@ -6,6 +6,7 @@ import fetch from "isomorphic-fetch"
 import MapBrazil from "../components/MapBrazil"
 import DataTable from "../components/DataTable"
 import BrazilTotalResults from "../components/BrazilTotalResults"
+import Footer from "../components/Footer"
 
 const Home = ({ results }) => {
 	const [county, setCounty] = useState(null)
@@ -58,6 +59,7 @@ const Home = ({ results }) => {
 					Dados por estado:
 				</Text>
 				<DataTable columns={columns} data={results} />
+				<Footer />
 			</Box>
 		</div>
 	)

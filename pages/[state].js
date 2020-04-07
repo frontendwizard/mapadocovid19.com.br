@@ -8,6 +8,7 @@ import { Heading, Text, Box } from "@chakra-ui/core"
 import MapBrazil from "../components/MapBrazil"
 import DataTable from "../components/DataTable"
 import StateTotalResults from "../components/StateTotalResults"
+import Footer from "../components/Footer"
 
 import municipalities from "../utils/municipalities.json"
 
@@ -74,6 +75,7 @@ const Post = ({ states, cities, history }) => {
 					columns={columns}
 					data={cities.filter((c) => c.state === county)}
 				/>
+				<Footer />
 			</Box>
 		</div>
 	)
