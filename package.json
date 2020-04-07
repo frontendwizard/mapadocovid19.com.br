@@ -21,6 +21,7 @@
     "@vx/scale": "^0.0.195",
     "d3-geo": "^1.11.9",
     "d3-interpolate": "^1.4.0",
+    "date-fns": "^2.11.1",
     "emotion-theming": "^10.0.27",
     "isomorphic-fetch": "^2.2.1",
     "next": "9.3.4",

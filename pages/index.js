@@ -7,8 +7,9 @@ import MapBrazil from "../components/MapBrazil"
 import DataTable from "../components/DataTable"
 import BrazilTotalResults from "../components/BrazilTotalResults"
 import Footer from "../components/Footer"
+import LastUpdateInfo from "../components/LastUpdateInfo"
 
-const Home = ({ results }) => {
+const Home = ({ results, lastUpdate }) => {
 	const [county, setCounty] = useState(null)
 	const columns = useMemo(
 		() => [
@@ -49,11 +50,7 @@ const Home = ({ results }) => {
 					selectedState={county}
 					onStateSelection={(state) => setCounty(state)}
 				/>
-				<Text fontSize="m" color="green.500" textAlign="end">
-					Última atualização:
-					<br />
-					<span style={{ fontWeight: "bold" }}>{results[0].date}</span>
-				</Text>
+				<LastUpdateInfo lastUpdate={lastUpdate} />
 				<BrazilTotalResults results={results} />
 				<Text fontSize="lg" color="gray.500" mt={6}>
 					Dados por estado:
@@ -66,12 +63,14 @@ const Home = ({ results }) => {
 }
 
 export async function getStaticProps() {
-	const res = await fetch(
+	const { results } = await fetch(
 		`https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state`
-	)
-	const { results } = await res.json()
+	).then((r) => r.json())
+	const { tables } = await fetch(
+		`https://brasil.io/api/dataset/covid19`
+	).then((r) => r.json())
 	return {
-		props: { results },
+		props: { results, lastUpdate: tables[1].import_date },
 	}
 }
 
