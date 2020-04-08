@@ -35,6 +35,7 @@ const Post = ({ states, cities, history, lastUpdate }) => {
 				// eslint-disable-next-line react/display-name
 				accessor: ({ estimated_population_2019 }) =>
 					estimated_population_2019.toLocaleString(),
+				sortType: "alphanumeric",
 				sortDescFirst: true,
 			},
 		],
