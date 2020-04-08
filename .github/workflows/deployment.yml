@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Deployment
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -16,8 +16,5 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: CURL-ACTION
-      uses: enflo/curl-action@v1.2
-      with:
-        # curl arguments
-        curl: -X POST https://api.zeit.co/v1/integrations/deploy/QmaoEk2yPVgwrT5ck9pGwiUXuBqjm8nVFeenDA6cqdFNZL/omrxg48jkR
+    - name: Deploy to Zeit
+      run: curl -X POST https://api.zeit.co/v1/integrations/deploy/QmaoEk2yPVgwrT5ck9pGwiUXuBqjm8nVFeenDA6cqdFNZL/omrxg48jkR
