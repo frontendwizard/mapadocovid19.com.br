@@ -1,5 +1,5 @@
 module.exports = {
 	env: {
-		gaTrackingId: "@gatrackingid",
+		gaTrackingId: "UA-158376923-2",
 	},
 }

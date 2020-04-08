@@ -54,7 +54,7 @@ const Post = ({ states, cities, history, lastUpdate }) => {
 				<Heading as="h1" fontSize="2xl" mt={0}>
 					COVID-19 no Brasil
 				</Heading>
-				<Text fontSize="xl" color="gray.500">
+				<Text fontSize="lg" color="gray.500">
 					Selecione um estado para mais detalhes
 				</Text>
 				<MapBrazil
