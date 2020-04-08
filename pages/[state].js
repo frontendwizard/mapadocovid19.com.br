@@ -20,13 +20,14 @@ const Post = ({ states, cities, history, lastUpdate }) => {
 	const columns = useMemo(
 		() => [
 			{ Header: "cidade", accessor: "city" },
-			{ Header: "casos", accessor: "confirmed" },
-			{ Header: "mortes", accessor: "deaths" },
+			{ Header: "casos", accessor: "confirmed", sortDescFirst: true },
+			{ Header: "mortes", accessor: "deaths", sortDescFirst: true },
 			{
 				Header: "mortalidade",
 				accessor: ({ death_rate }) =>
 					death_rate ? `${Math.round(death_rate * 1000) / 10}%` : "0%",
 				id: "death_rate",
+				sortDescFirst: true,
 			},
 			{
 				Header: "população",
@@ -34,6 +35,8 @@ const Post = ({ states, cities, history, lastUpdate }) => {
 				// eslint-disable-next-line react/display-name
 				accessor: ({ estimated_population_2019 }) =>
 					estimated_population_2019.toLocaleString(),
+				sortType: "alphanumeric",
+				sortDescFirst: true,
 			},
 		],
 		[]

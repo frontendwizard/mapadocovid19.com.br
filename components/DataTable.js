@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Text, Box } from "@chakra-ui/core"
+import { Text, Box, Icon } from "@chakra-ui/core"
 import { useTable, useSortBy } from "react-table"
 
 const DataTable = ({ columns, data }) => {
@@ -20,7 +20,7 @@ const DataTable = ({ columns, data }) => {
 		useSortBy
 	)
 	return (
-		<Box overflowX="scroll">
+		<Box overflowX="scroll" maxHeight={[350, 475, 600]} position="relative">
 			<Box
 				as="table"
 				rounded="md"
@@ -37,6 +37,8 @@ const DataTable = ({ columns, data }) => {
 								// eslint-disable-next-line react/jsx-key
 								<Box
 									as="th"
+									position="sticky"
+									top={0}
 									px={5}
 									py={3}
 									bg="gray.100"
@@ -45,15 +47,27 @@ const DataTable = ({ columns, data }) => {
 									textAlign="left"
 									{...column.getHeaderProps(column.getSortByToggleProps())}
 								>
-									<Text
-										color="gray.600"
-										as="span"
-										size="xs"
-										textTransform="uppercase"
-										letterSpacing="wider"
-									>
-										{column.render("Header")}
-									</Text>
+									<Box display="flex">
+										<Text
+											as="span"
+											color="gray.600"
+											size="xs"
+											textTransform="uppercase"
+											letterSpacing="wider"
+											width="auto"
+											height="auto"
+											mr={column.isSorted ? 2 : 6}
+										>
+											{column.render("Header")}
+										</Text>
+										{column.isSorted && (
+											<Icon
+												name={
+													column.isSortedDesc ? "chevron-down" : "chevron-up"
+												}
+											/>
+										)}
+									</Box>
 								</Box>
 							))}
 						</tr>
