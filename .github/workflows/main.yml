@@ -16,5 +16,5 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: CURL-ACTION
+    - name: Deploy to Zeit
       run: curl -X POST https://api.zeit.co/v1/integrations/deploy/QmaoEk2yPVgwrT5ck9pGwiUXuBqjm8nVFeenDA6cqdFNZL/omrxg48jkR
