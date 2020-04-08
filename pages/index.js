@@ -14,8 +14,8 @@ const Home = ({ results, lastUpdate }) => {
 	const columns = useMemo(
 		() => [
 			{ Header: "estado", accessor: "state" },
-			{ Header: "casos", accessor: "confirmed" },
-			{ Header: "mortes", accessor: "deaths" },
+			{ Header: "casos", accessor: "confirmed", sortDescFirst: true },
+			{ Header: "mortes", accessor: "deaths", sortDescFirst: true },
 			{
 				Header: "mortalidade",
 				// eslint-disable-next-line camelcase
@@ -23,6 +23,7 @@ const Home = ({ results, lastUpdate }) => {
 					// eslint-disable-next-line camelcase
 					death_rate ? `${Math.round(death_rate * 1000) / 10}%` : "0%",
 				id: "death_rate",
+				sortDescFirst: true,
 			},
 		],
 		[]
