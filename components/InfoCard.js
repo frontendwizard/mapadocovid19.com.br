@@ -1,6 +1,15 @@
 import { Heading, Text, Flex } from "@chakra-ui/core"
 
-const InfoCard = ({ label, value, color, ...rest }) => (
+import leadingSign from "../utils/leadingSign"
+
+const InfoCard = ({
+	label,
+	value,
+	color,
+	comparison,
+	suffix = "",
+	...rest
+}) => (
 	<Flex
 		direction="column"
 		align="center"
@@ -10,11 +19,23 @@ const InfoCard = ({ label, value, color, ...rest }) => (
 		p={3}
 		{...rest}
 	>
-		<Heading as="h2" fontSize="xs" m={0} color={`${color}.600`}>
+		<Heading as="h2" fontSize="xs" m={0} color={`${color}.500`}>
 			{label}
 		</Heading>
-		<Text fontSize="2xl" fontWeight="bold" m={0} color={`${color}.500`}>
+		<Text
+			as="span"
+			fontSize="2xl"
+			fontWeight="bold"
+			m={0}
+			color={`${color}.700`}
+		>
 			{value}
+			{suffix}
+		</Text>
+		<Text as="span" fontSize="sm" ml={1} color={`${color}.700`}>
+			[{leadingSign(comparison)}
+			{comparison}
+			{suffix}]
 		</Text>
 	</Flex>
 )
