@@ -6,7 +6,7 @@ name: Deployment
 # events but only for the master branch
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: "0 */1 * * *"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -16,5 +16,5 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Deploy to Zeit
-      run: curl -X POST https://api.zeit.co/v1/integrations/deploy/QmaoEk2yPVgwrT5ck9pGwiUXuBqjm8nVFeenDA6cqdFNZL/omrxg48jkR
+      - name: Deploy to Zeit
+        run: curl -X POST https://api.zeit.co/v1/integrations/deploy/QmaoEk2yPVgwrT5ck9pGwiUXuBqjm8nVFeenDA6cqdFNZL/omrxg48jkR
