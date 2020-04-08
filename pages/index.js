@@ -1,21 +1,63 @@
-import { useMemo, useState } from "react"
+import { useMemo, useCallback } from "react"
 import Head from "next/head"
 import { Heading, Text, Box } from "@chakra-ui/core"
 import fetch from "isomorphic-fetch"
 
-import MapBrazil from "../components/MapBrazil"
+import BrazilMap from "../components/BrazilMap"
 import DataTable from "../components/DataTable"
 import BrazilTotalResults from "../components/BrazilTotalResults"
 import Footer from "../components/Footer"
 import LastUpdateInfo from "../components/LastUpdateInfo"
+import leadingSign from "../utils/leadingSign"
+import counties from "../utils/counties"
 
-const Home = ({ results, lastUpdate }) => {
-	const [county, setCounty] = useState(null)
+const Home = ({ current, previous, lastUpdate }) => {
+	const customSort = useCallback((rowA, rowB, columnId) => {
+		return rowA.original[columnId] - rowB.original[columnId]
+	}, [])
 	const columns = useMemo(
 		() => [
 			{ Header: "estado", accessor: "state" },
-			{ Header: "casos", accessor: "confirmed", sortDescFirst: true },
-			{ Header: "mortes", accessor: "deaths", sortDescFirst: true },
+			{
+				Header: "casos",
+				id: "confirmed",
+				// eslint-disable-next-line react/display-name
+				accessor: ({ confirmed, state }) => {
+					const previousConfirmed = previous.find((uf) => uf.state === state)
+						.confirmed
+					return (
+						<>
+							<Text as="span">{confirmed}</Text>
+							<Text as="span" fontSize="xs" ml={2}>
+								[{leadingSign(confirmed - previousConfirmed)}
+								{confirmed - previousConfirmed}]
+							</Text>
+						</>
+					)
+				},
+				sortType: customSort,
+				sortDescFirst: true,
+			},
+			{
+				Header: "mortes",
+				id: "deaths",
+				// eslint-disable-next-line react/display-name
+				accessor: ({ deaths, state }) => {
+					const previousDeaths = previous.find((uf) => uf.state === state)
+						.deaths
+					return (
+						<>
+							<Text as="span">{deaths}</Text>
+							<Text as="span" fontSize="xs" ml={2}>
+								[{leadingSign(deaths - previousDeaths)}
+								{deaths - previousDeaths}]
+							</Text>
+						</>
+					)
+				},
+				sortType: customSort,
+				sortDescFirst: true,
+			},
 			{
 				Header: "mortalidade",
 				// eslint-disable-next-line camelcase
@@ -46,17 +88,13 @@ const Home = ({ results, lastUpdate }) => {
 				<Text fontSize="lg" color="gray.500">
 					Selecione um estado para mais detalhes
 				</Text>
-				<MapBrazil
-					results={results}
-					selectedState={county}
-					onStateSelection={(state) => setCounty(state)}
-				/>
+				<BrazilMap results={current} />
 				<LastUpdateInfo lastUpdate={lastUpdate} />
-				<BrazilTotalResults results={results} />
+				<BrazilTotalResults current={current} previous={previous} />
 				<Text fontSize="lg" color="gray.500" mt={6}>
 					Dados por estado:
 				</Text>
-				<DataTable columns={columns} data={results} />
+				<DataTable columns={columns} data={current} />
 				<Footer />
 			</Box>
 		</div>
@@ -64,14 +102,21 @@ const Home = ({ results, lastUpdate }) => {
 }
 
 export async function getStaticProps() {
-	const { results } = await fetch(
+	const { results: current } = await fetch(
 		`https://brasil.io/api/dataset/covid19/caso/data?is_last=true&place_type=state`
 	).then((r) => r.json())
+	const { results: history } = await fetch(
+		`https://brasil.io/api/dataset/covid19/caso/data?is_last=false&place_type=state`
+	).then((r) => r.json())
+	const previous = counties.map((s) =>
+		history.find((report) => report.state === s)
+	)
 	const { tables } = await fetch(
 		`https://brasil.io/api/dataset/covid19`
 	).then((r) => r.json())
+	console.log(previous)
 	return {
-		props: { results, lastUpdate: tables[1].import_date },
+		props: { current, previous, lastUpdate: tables[1].import_date },
 	}
 }
 
