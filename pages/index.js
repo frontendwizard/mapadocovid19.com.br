@@ -114,7 +114,6 @@ export async function getStaticProps() {
 	const { tables } = await fetch(
 		`https://brasil.io/api/dataset/covid19`
 	).then((r) => r.json())
-	console.log(previous)
 	return {
 		props: { current, previous, lastUpdate: tables[1].import_date },
 	}
