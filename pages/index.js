@@ -3,7 +3,7 @@ import Head from "next/head"
 import { Heading, Text, Box } from "@chakra-ui/core"
 import fetch from "isomorphic-fetch"
 
-import BrazilMap from "../components/BrazilMap"
+import BrazilClorophletMap from "../components/BrazilClorophletMap"
 import DataTable from "../components/DataTable"
 import BrazilTotalResults from "../components/BrazilTotalResults"
 import Footer from "../components/Footer"
@@ -88,7 +88,7 @@ const Home = ({ current, previous, lastUpdate }) => {
 				<Text fontSize="lg" color="gray.500">
 					Selecione um estado para mais detalhes
 				</Text>
-				<BrazilMap results={current} />
+				<BrazilClorophletMap results={current} />
 				<LastUpdateInfo lastUpdate={lastUpdate} />
 				<BrazilTotalResults current={current} previous={previous} />
 				<Text fontSize="lg" color="gray.500" mt={6}>

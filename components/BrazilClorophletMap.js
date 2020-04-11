@@ -27,7 +27,7 @@ const State = styled.path`
 	${selectedStyles}
 `
 
-const BrazilMap = ({ results }) => {
+const BrazilClorophletMap = ({ results }) => {
 	const router = useRouter()
 	const { state } = router.query
 	const world = topojson.feature(topology, topology.objects.states)
@@ -66,7 +66,7 @@ const BrazilMap = ({ results }) => {
 								return (
 									<g>
 										{mercator.features.map(({ feature: f }) => (
-											<Link key={f.id} href="/[state]" as={`/${f.id}`}>
+											<Link key={f.id} href="/[county]" as={`/${f.id}`}>
 												<State
 													fill={
 														state
@@ -125,4 +125,4 @@ const BrazilMap = ({ results }) => {
 	)
 }
 
-export default BrazilMap
+export default BrazilClorophletMap
