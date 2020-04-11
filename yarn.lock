@@ -1251,7 +1251,7 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
 
-"@types/react-dom@^16.8.3":
+"@types/react-dom@*", "@types/react-dom@^16.8.3":
   version "16.9.6"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.6.tgz#9e7f83d90566521cc2083be2277c6712dcaf754c"
   integrity sha512-S6ihtlPMDotrlCJE9ST1fRmYrQNNwfgL61UB4I1W7M6kPulUKx9fXAleW5zpdIjUQ4fTaaog8uERezjsGUj9HQ==
@@ -1277,6 +1277,15 @@
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@use-it/event-listener/-/event-listener-0.1.3.tgz#a9920b2819d211cf55e68e830997546eec6886d3"
   integrity sha512-UCHkLOVU+xj3/1R8jXz8GzDTowkzfIDPESOBlVC2ndgwUSBEqiFdwCoUEs2lcGhJOOiEdmWxF+T23C5+60eEew==
+
+"@vx/bounds@0.0.195":
+  version "0.0.195"
+  resolved "https://registry.yarnpkg.com/@vx/bounds/-/bounds-0.0.195.tgz#9c0e36f29b6d6f780c03e917425cc9f4072d61dd"
+  integrity sha512-G99BCC335UgOsKSecye2HRGrnDazOXEcfuu7F2SvzgfPu3jNanrLpu7Y8Te13Ibo13wNUMY3RUTJszTaBHSI4w==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-dom" "*"
+    prop-types "^15.5.10"
 
 "@vx/geo@^0.0.195":
   version "0.0.195"
@@ -1332,6 +1341,17 @@
   dependencies:
     "@types/d3-scale" "^2.1.1"
     d3-scale "^2.2.2"
+
+"@vx/tooltip@^0.0.195":
+  version "0.0.195"
+  resolved "https://registry.yarnpkg.com/@vx/tooltip/-/tooltip-0.0.195.tgz#f43da8a05a2876ca290007215ca197982a30e627"
+  integrity sha512-xgUuXhe6eeIBD7HohQ31lWxVXTuui11qF2S4nsd+tnQemd2qv0Bg+HmvqJnXDCp7uBwLLupb40T2j1y9y0rGCQ==
+  dependencies:
+    "@types/classnames" "^2.2.9"
+    "@types/react" "*"
+    "@vx/bounds" "0.0.195"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
