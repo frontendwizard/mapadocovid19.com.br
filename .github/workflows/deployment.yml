@@ -6,7 +6,7 @@ name: Deployment
 # events but only for the master branch
 on:
   schedule:
-    - cron: "13 * * * *"
+    - cron: "*/10 * * * *"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -16,12 +16,23 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - uses: actions/checkout@v2
       - name: Data Source timestamp
         id: datasource
         run: printf "::set-output name=timestamp::%s" $(curl -s https://brasil.io/api/dataset/covid19 | jq -r '.tables[1].import_date')
       - name: Deployed timestamp
         id: deployed
-        run: printf "::set-output name=timestamp::%s" $(curl -s https://mapadocovid19.com.br/api/last-updated | jq -r '.lastUpdate')
+        run: printf "::set-output name=timestamp::%s" $(jq '.lastUpdate' .github/workflows/lastUpdate.json)
       - name: Deploy to Zeit
         run: curl -X POST https://api.zeit.co/v1/integrations/deploy/QmaoEk2yPVgwrT5ck9pGwiUXuBqjm8nVFeenDA6cqdFNZL/omrxg48jkR
+        if: steps.release.datasource.timestamp != steps.release.deployed.timestamp
+      - name: Update timestamp
+        run: jq --arg timestamp steps.release.datasource.timestamp '.lastUpdate = $timestamp' .github/workflows/lastUpdate.json
+        if: steps.release.datasource.timestamp != steps.release.deployed.timestamp
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v4
+        with:
+          message: ":green_heart: update timestamp"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: steps.release.datasource.timestamp != steps.release.deployed.timestamp
