@@ -10,8 +10,10 @@ import CountyTotalResults from "../components/CountyTotalResults"
 import LastUpdateInfo from "../components/LastUpdateInfo"
 import Footer from "../components/Footer"
 import CountyMap from "../components/CountyMap"
-import municipalities from "../utils/municipalities.json"
+
+import citiesData from "../utils/cities.json"
 import leadingSign from "../utils/leadingSign"
+import countiesName from "../utils/counties.json"
 
 const Post = ({
 	counties,
@@ -107,7 +109,7 @@ const Post = ({
 	return (
 		<div className="container">
 			<Head>
-				<title>Mapa do COVID-19 no Brasil</title>
+				<title>Mapa do COVID-19 no {countiesName[county]}</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<Box
@@ -117,10 +119,10 @@ const Post = ({
 				margin={[0, "auto"]}
 			>
 				<Heading as="h1" fontSize="2xl" mt={0}>
-					COVID-19 no Brasil
+					COVID-19 no {countiesName[county]}
 				</Heading>
 				<Text fontSize="lg" color="gray.500">
-					Selecione um estado para mais detalhes
+					Selecione uma cidade para mais detalhes
 				</Text>
 				<CountyMap results={counties} cities={cities} />
 				<LastUpdateInfo lastUpdate={lastUpdate} />
@@ -157,7 +159,7 @@ export async function getStaticProps({ params: { county } }) {
 		// eslint-disable-next-line camelcase
 		.filter(({ city_ibge_code }) => !!city_ibge_code)
 		.map((result) => {
-			const { latitude: lat, longitude: lon } = municipalities.find(
+			const { latitude: lat, longitude: lon } = citiesData.find(
 				(m) => `${m.codigo_ibge}` === result.city_ibge_code
 			)
 			return { ...result, coords: { lat, lon } }
@@ -183,35 +185,7 @@ export async function getStaticProps({ params: { county } }) {
 
 export async function getStaticPaths() {
 	return {
-		paths: [
-			{ params: { county: "AP" } },
-			{ params: { county: "PA" } },
-			{ params: { county: "RR" } },
-			{ params: { county: "AC" } },
-			{ params: { county: "AL" } },
-			{ params: { county: "AM" } },
-			{ params: { county: "BA" } },
-			{ params: { county: "CE" } },
-			{ params: { county: "DF" } },
-			{ params: { county: "ES" } },
-			{ params: { county: "GO" } },
-			{ params: { county: "MA" } },
-			{ params: { county: "MG" } },
-			{ params: { county: "MS" } },
-			{ params: { county: "MT" } },
-			{ params: { county: "PB" } },
-			{ params: { county: "PE" } },
-			{ params: { county: "PI" } },
-			{ params: { county: "PR" } },
-			{ params: { county: "RJ" } },
-			{ params: { county: "RN" } },
-			{ params: { county: "RO" } },
-			{ params: { county: "RS" } },
-			{ params: { county: "SC" } },
-			{ params: { county: "SE" } },
-			{ params: { county: "SP" } },
-			{ params: { county: "TO" } },
-		],
+		paths: Object.keys(countiesName).map((county) => ({ params: { county } })),
 		fallback: false,
 	}
 }

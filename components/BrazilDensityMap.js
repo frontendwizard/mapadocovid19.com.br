@@ -3,12 +3,13 @@ import { scaleLinear } from "@vx/scale"
 import { Mercator } from "@vx/geo"
 import { LegendLinear, LegendItem, LegendLabel } from "@vx/legend"
 import * as topojson from "topojson"
-import { Text, Flex, Box, Tooltip, Link as ChakraLink } from "@chakra-ui/core"
+import * as d3 from "d3"
+import { Text, Flex, Box } from "@chakra-ui/core"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 
-import topology from "../utils/topologyLowPoly.json"
+import topology from "../utils/simpleTopology.json"
 
 const selectedStyles = (props) =>
 	props.variant === "selected" &&
@@ -32,53 +33,51 @@ const BrazilClorophletMap = ({ results }) => {
 		domain: [0, Math.max(...results.map((r) => r.confirmed))],
 		range: ["white", "red"],
 	})
-	const offset = 0
+	const rawPoints = () => {
+		// range longitudes from 10 (S) to 55 (N) for every 1 degree
+		const lons = d3.range(-34, 5, 2).reverse()
+
+		// range latitudes from -130 (W) to -60 (E) for every 1 degree
+		const lats = d3.range(-75, -30, 2)
+
+		// long / lat points in order from west to east, then north to south, like a wrap
+		return lons.map((lon, i) => lats.map((lat) => [lat, lon])).flat()
+	}
+	const geojson = rawPoints.map((d, i) => {
+		return {
+			type: "Feature",
+			geometry: {
+				type: "Point",
+				coordinates: d,
+			},
+			properties: {
+				index: i,
+			},
+		}
+	})
 	return (
 		<Box height={[350, 475, 600]} mt={8} position="relative">
 			<ParentSize>
 				{({ width: w, height: h }) => (
 					<svg width={w} height={h}>
-						<Mercator
-							data={world.features}
-							fitExtent={[
-								[
-									[offset, offset],
-									[w - offset, h - offset],
-								],
-								outline,
-							]}
-						>
+						<Mercator data={world.features} fitSize={[[w, h], outline]}>
 							{(mercator) => {
-								mercator.features.sort((a, b) => {
-									const countyA = results.find((r) => r.state === a.feature.id)
-									const countyB = results.find((r) => r.state === b.feature.id)
-									return countyB.confirmed - countyA.confirmed
-								})
 								return (
-									<g>
-										{mercator.features.map(({ feature: f }) => {
-											const county = results.find((r) => r.state === f.id)
-											return (
-												<Tooltip
-													key={f.id}
-													label={`${county.state} (${county.confirmed} confirmados, ${county.deaths} mortes)`}
-													placement="top"
-													hasArrow
-												>
-													<Box as="g">
-														<Link href="/[county]" as={`/${f.id}`}>
-															<ChakraLink href={`/${f.id}`}>
-																<State
-																	fill={colorScale(county.confirmed)}
-																	d={mercator.path(f)}
-																/>
-															</ChakraLink>
-														</Link>
-													</Box>
-												</Tooltip>
-											)
-										})}
-									</g>
+									<>
+										<g>
+											{mercator.features.map(({ feature: f }) => (
+												<Link key={f.id} href="/[county]" as={`/${f.id}`}>
+													<State
+														fill={colorScale(
+															results.find((r) => r.state === f.id).confirmed
+														)}
+														d={mercator.path(f)}
+													/>
+												</Link>
+											))}
+										</g>
+										<g>{}</g>
+									</>
 								)
 							}}
 						</Mercator>
@@ -111,7 +110,7 @@ const BrazilClorophletMap = ({ results }) => {
 								</Flex>
 								<LegendLabel>
 									<Text m={0} fontSize="xs">
-										{Math.round(label.text)} casos confirmados
+										{label.text}
 									</Text>
 								</LegendLabel>
 							</LegendItem>

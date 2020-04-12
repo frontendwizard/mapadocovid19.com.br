@@ -9,7 +9,7 @@ import BrazilTotalResults from "../components/BrazilTotalResults"
 import Footer from "../components/Footer"
 import LastUpdateInfo from "../components/LastUpdateInfo"
 import leadingSign from "../utils/leadingSign"
-import counties from "../utils/counties"
+import counties from "../utils/counties.json"
 
 const Home = ({ current, previous, lastUpdate }) => {
 	const customSort = useCallback((rowA, rowB, columnId) => {
@@ -108,7 +108,7 @@ export async function getStaticProps() {
 	const { results: history } = await fetch(
 		`https://brasil.io/api/dataset/covid19/caso/data?is_last=false&place_type=state`
 	).then((r) => r.json())
-	const previous = counties.map((s) =>
+	const previous = Object.keys(counties).map((s) =>
 		history.find((report) => report.state === s)
 	)
 	const { tables } = await fetch(

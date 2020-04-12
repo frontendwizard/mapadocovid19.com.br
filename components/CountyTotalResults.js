@@ -1,5 +1,6 @@
 import InfoCard from "../components/InfoCard"
 import { Stack, Heading, Box } from "@chakra-ui/core"
+import countiesName from "../utils/counties.json"
 
 const CountyTotalResults = ({ history }) => {
 	const mostRecent = history[0]
@@ -9,7 +10,9 @@ const CountyTotalResults = ({ history }) => {
 	const deathComparison = mostRecent.deaths - previous.deaths
 	return (
 		<Box>
-			<Heading fontSize="lg">Total em {mostRecent.state}:</Heading>
+			<Heading fontSize="lg">
+				Total no estado de {countiesName[mostRecent.state]}:
+			</Heading>
 			<Stack isInline spacing={4}>
 				<InfoCard
 					color="red"

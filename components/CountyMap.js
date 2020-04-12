@@ -9,7 +9,7 @@ import { css } from "@emotion/core"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
-import topology from "../utils/simpleTopology.json"
+import topology from "../utils/topologyLowPoly.json"
 
 const selectedStyles = (props) =>
 	props.variant === "selected" &&
@@ -98,36 +98,26 @@ const CountyMap = ({ cities }) => {
 											)}
 											variant="selected"
 										/>
-										{cities && (
-											<>
-												<Cities
-													cities={cities.filter(
-														(city) => city.state === county
-													)}
-													citiesOutsideCounty={cities.filter(
-														(city) => city.state !== county
-													)}
-													projection={
-														mercator.features.find(
-															(f) => f.feature.id === county
-														).projection
-													}
-													scale={radiusScale}
-													isTabbable
-												/>
-												<Cities
-													cities={cities.filter(
-														(city) => city.state !== county
-													)}
-													projection={
-														mercator.features.find(
-															(f) => f.feature.id === county
-														).projection
-													}
-													scale={radiusScale}
-												/>
-											</>
-										)}
+										<Cities
+											cities={cities.filter((city) => city.state === county)}
+											citiesOutsideCounty={cities.filter(
+												(city) => city.state !== county
+											)}
+											projection={
+												mercator.features.find((f) => f.feature.id === county)
+													.projection
+											}
+											scale={radiusScale}
+											isTabbable
+										/>
+										<Cities
+											cities={cities.filter((city) => city.state !== county)}
+											projection={
+												mercator.features.find((f) => f.feature.id === county)
+													.projection
+											}
+											scale={radiusScale}
+										/>
 									</g>
 								)
 							}}
@@ -144,9 +134,9 @@ const CountyMap = ({ cities }) => {
 				border="1px"
 				bg="whiteAlpha.500"
 			>
-				<LegendSize scale={radiusScale}>
+				<LegendSize scale={radiusScale} domain={[1, 10, 100, 1000]}>
 					{(labels) => {
-						return labels.slice(1).map((label, i) => (
+						return labels.map((label, i) => (
 							<LegendItem key={`legend-threshold-${i}`}>
 								<Flex mr={2}>
 									<svg width={label.value * 2} height={label.value * 2}>
@@ -161,7 +151,7 @@ const CountyMap = ({ cities }) => {
 								</Flex>
 								<LegendLabel>
 									<Text m={0} fontSize="xs">
-										{label.text}
+										{Math.round(label.text)}
 									</Text>
 								</LegendLabel>
 							</LegendItem>
