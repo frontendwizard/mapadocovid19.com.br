@@ -16,7 +16,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2.1.0
       - name: Deploy to Zeit
         env:
           DEPLOY_WEBHOOK_URL: ${{ secrets.deployWebhook }}
