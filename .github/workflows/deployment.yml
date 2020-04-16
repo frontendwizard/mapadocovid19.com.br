@@ -6,7 +6,7 @@ name: Deployment
 # events but only for the master branch
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/60 * * * *"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -16,26 +16,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
-      - name: Data Source timestamp
-        id: datasource
-        run: echo ::set-output name=timestamp::$(curl -s https://brasil.io/api/dataset/covid19 | jq -r '.tables[1].import_date')
-      - name: Deployed timestamp
-        id: deployed
-        run: echo ::set-output name=timestamp::$(jq '.lastUpdate' .github/workflows/lastUpdate.json)
-      - name: Update timestamp
-        run: jq --arg timestamp ${{steps.datasource.outputs.timestamp}} '.lastUpdate = $timestamp' .github/workflows/lastUpdate.json
-        if: steps.deployed.outputs.timestamp != steps.datasource.outputs.timestamp
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v4
-        with:
-          author_name: Github Action
-          author_email: action@github.com
-          message: ":green_heart: update timestamp"
-          add: "."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: ZEIT Now Deployment
+        uses: amondnet/now-deployment@v2.0.2
+
