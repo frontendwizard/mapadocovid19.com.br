@@ -17,8 +17,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2.1.0
-      - name: ZEIT Now Deployment
-        uses: amondnet/now-deployment@v2.0.2
-        with:
-          zeit-token: ${{ secrets.zeitToken }}
+      - name: Deploy to Zeit
+        env:
+          DEPLOY_WEBHOOK_URL: ${{ secrets.deployWebhook }}
+        run: curl -X POST $DEPLOY_WEBHOOK_URL
 
