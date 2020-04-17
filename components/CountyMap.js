@@ -8,7 +8,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import UseEscToNavigateBack from "../hooks/UseEscToNavigateBack"
+import useEscToNavigateBack from "../hooks/useEscToNavigateBack"
 
 import topology from "../utils/topologyLowPoly.json"
 
@@ -64,7 +64,7 @@ const CountyMap = ({ cities }) => {
 		range: [2, 4, 6, 10],
 	})
 	const offset = 25
-	UseEscToNavigateBack(router)
+	useEscToNavigateBack(router)
 
 	return (
 		<Box height={[350, 475, 600]} mt={8} position="relative">
