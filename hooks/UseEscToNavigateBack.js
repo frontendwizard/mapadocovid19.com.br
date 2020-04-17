@@ -1,6 +1,10 @@
 import { useEffect } from "react"
-
+/**
+ * A hook that allows esc to navegate back.
+ * @param {next/router} router - The NextRouter used on components an pages
+ */
 const UseEscToNavigateBack = (router) => {
+
 	const handleEsc = (event) => {
 		if (event.keyCode === 27) {
 			const oldPath = router.asPath
@@ -10,7 +14,8 @@ const UseEscToNavigateBack = (router) => {
 				router.push("/")
 			}
 		}
-	}
+  }
+  
 	useEffect(() => {
 		window.addEventListener("keydown", handleEsc)
 		// Remove event listeners on cleanup
