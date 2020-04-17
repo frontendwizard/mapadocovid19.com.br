@@ -8,7 +8,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect } from 'react';
+import UseEscToNavigateBack from "../hooks/UseEscToNavigateBack"
 
 import topology from "../utils/topologyLowPoly.json"
 
@@ -64,23 +64,7 @@ const CountyMap = ({ cities }) => {
 		range: [2, 4, 6, 10],
 	})
 	const offset = 25
-	const handleEsc = (event) => {
-		if (event.keyCode === 27) {
-			const oldPath = router.asPath;
-			router.back();
-			const newPath = router.asPath;
-			if(oldPath === newPath){
-				router.push("/");
-			}
-	   }
-	 };
-	useEffect(() => {
-		window.addEventListener('keydown', handleEsc);
-		// Remove event listeners on cleanup
-		return () => {
-		  window.removeEventListener('keydown', handleEsc);
-		};
-	  }, []);
+	UseEscToNavigateBack(router)
 
 	return (
 		<Box height={[350, 475, 600]} mt={8} position="relative">
