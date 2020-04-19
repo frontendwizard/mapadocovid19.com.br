@@ -8,8 +8,8 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import useEscToNavigateBack from "../hooks/useEscToNavigateBack"
 
+import useEscToNavigateBack from "../../hooks/useEscToNavigateBack"
 import topology from "../../utils/topologyLowPoly.json"
 
 const selectedStyles = (props) =>

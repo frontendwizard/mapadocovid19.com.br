@@ -2,7 +2,7 @@ import fetch from "isomorphic-fetch"
 import { Heading, Text, Box } from "@chakra-ui/core"
 import { useRouter } from "next/router"
 
-import * as County from "../components/county"
+import * as County from "../components/County"
 import LastUpdateInfo from "../components/LastUpdateInfo"
 import Footer from "../components/Footer"
 
