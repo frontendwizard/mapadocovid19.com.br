@@ -8,9 +8,9 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import useEscToNavigateBack from "../hooks/useEscToNavigateBack"
 
-import topology from "../utils/topologyLowPoly.json"
+import useEscToNavigateBack from "../../hooks/useEscToNavigateBack"
+import topology from "../../utils/topologyLowPoly.json"
 
 const selectedStyles = (props) =>
 	props.variant === "selected" &&
@@ -55,7 +55,7 @@ const Cities = ({ cities, projection, scale, isTabbable }) => {
 	)
 }
 
-const CountyMap = ({ cities }) => {
+const Map = ({ cities }) => {
 	const router = useRouter()
 	const { county } = router.query
 	const world = topojson.feature(topology, topology.objects.states)
@@ -166,4 +166,4 @@ const CountyMap = ({ cities }) => {
 	)
 }
 
-export default CountyMap
+export default Map

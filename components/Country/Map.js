@@ -8,7 +8,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 
-import topology from "../utils/topologyLowPoly.json"
+import topology from "../../utils/topologyLowPoly.json"
 
 const selectedStyles = (props) =>
 	props.variant === "selected" &&
@@ -25,7 +25,7 @@ const State = styled.path`
 	${selectedStyles}
 `
 
-const BrazilClorophletMap = ({ results }) => {
+const Map = ({ results }) => {
 	const world = topojson.feature(topology, topology.objects.states)
 	const outline = topojson.mesh(topology, topology.objects.states)
 	const colorScale = scaleLinear({
@@ -123,4 +123,4 @@ const BrazilClorophletMap = ({ results }) => {
 	)
 }
 
-export default BrazilClorophletMap
+export default Map
