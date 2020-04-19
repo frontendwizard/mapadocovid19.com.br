@@ -1,8 +1,9 @@
-import InfoCard from "../components/InfoCard"
 import { Stack, Heading, Box } from "@chakra-ui/core"
-import countiesName from "../utils/counties.json"
 
-const CountyTotalResults = ({ history }) => {
+import InfoCard from "../InfoCard"
+import countiesName from "../../utils/counties.json"
+
+const TotalResults = ({ history }) => {
 	const mostRecent = history[0]
 	const previous = history[1]
 	const roundRate = (rate) => Math.round(rate * 1000) / 10
@@ -39,4 +40,4 @@ const CountyTotalResults = ({ history }) => {
 	)
 }
 
-export default CountyTotalResults
+export default TotalResults

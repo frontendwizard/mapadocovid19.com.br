@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { Text, Box, Icon } from "@chakra-ui/core"
 import { useTable, useSortBy } from "react-table"
 
-const DataTable = ({ columns, data }) => {
+const Table = ({ columns, data }) => {
 	const {
 		getTableProps,
 		getTableBodyProps,
@@ -105,4 +105,4 @@ const DataTable = ({ columns, data }) => {
 	)
 }
 
-export default DataTable
+export default Table
