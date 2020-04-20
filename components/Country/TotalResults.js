@@ -19,7 +19,7 @@ const TotalResults = ({ current, previous }) => {
 	return (
 		<Stack spacing={2}>
 			<Heading fontSize="lg">Total no Brasil:</Heading>
-			<Stack isInline spacing={4} justify="center">
+			<Stack isInline spacing={4}>
 				<InfoCard
 					color="red"
 					value={confirmed}
