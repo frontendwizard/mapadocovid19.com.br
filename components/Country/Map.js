@@ -26,7 +26,7 @@ const State = styled.path`
 `
 
 const Map = ({ results }) => {
-	const world = topojson.feature(topology, topology.objects.states)
+	const brazil = topojson.feature(topology, topology.objects.states)
 	const outline = topojson.mesh(topology, topology.objects.states)
 	const colorScale = scaleLinear({
 		domain: [0, Math.max(...results.map((r) => r.confirmed))],
@@ -39,7 +39,7 @@ const Map = ({ results }) => {
 				{({ width: w, height: h }) => (
 					<svg width={w} height={h}>
 						<Mercator
-							data={world.features}
+							data={brazil.features}
 							fitExtent={[
 								[
 									[offset, offset],
