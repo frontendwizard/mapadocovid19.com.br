@@ -1,4 +1,4 @@
-import { useState, forwardRef, useMemo } from "react"
+import { useState, forwardRef, useMemo, useEffect } from "react"
 import { ResponsiveLine } from "@nivo/line"
 import { differenceInCalendarDays, format } from "date-fns"
 import {
@@ -30,6 +30,11 @@ const RadioButton = forwardRef((props, ref) => {
 
 const NormalizedConfirmed = ({ reportsByCounty }) => {
 	const [selectedChart, setSelectedChart] = useState("topConfirmed")
+	const [animate, setAnimate] = useState(true)
+	// workaround of chart animation issue when toggling back from time scale
+	useEffect(() => {
+		setAnimate(true)
+	}, [animate])
 	const [fromFirstCaseDate, setFromFirstCaseDate] = useState(true)
 	const data = useMemo(() => {
 		const reportsFromDayOne = counties.map(({ initials, region }) => {
@@ -109,7 +114,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 			tickRotation: 45,
 			legend: "data",
 			legendPosition: "middle",
-			legendOffset: 50,
+			legendOffset: 40,
 		},
 
 		xScale: { type: "time", format: "%Y-%m-%d", precision: "day" },
@@ -139,7 +144,10 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 				variantColor="green"
 				size="sm"
 				isChecked={fromFirstCaseDate}
-				onChange={(e) => setFromFirstCaseDate(e.target.checked)}
+				onChange={(e) => {
+					setAnimate(false)
+					setFromFirstCaseDate(e.target.checked)
+				}}
 			>
 				<Text as="span">mostrar casos a partir da data do primeiro caso</Text>
 			</Checkbox>
@@ -152,24 +160,22 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 						legendOffset: -35,
 					}}
 					yScale={{ type: "linear" }}
-					yFormat={(value) =>
-						`${Math.round(value * 100) / 100} casos / 100k habitantes`
-					}
+					yFormat={(value) => `${Math.round(value * 100) / 100} casos`}
 					{...(fromFirstCaseDate
 						? fromFirstCaseDateChartOptions
 						: dateChartOptions)}
 					margin={{ top: 10, right: 10, bottom: 80, left: 50 }}
 					colors={{ scheme: "category10" }}
-					animate={false}
 					enableSlices="x"
 					enableGridX={false}
 					lineWidth={2}
 					enablePoints={false}
+					animate={animate}
+					curve="monotoneX"
 					legends={[
 						{
 							anchor: "bottom",
 							direction: "row",
-							justify: "center",
 							itemDirection: "left-to-right",
 							itemWidth: 30,
 							itemHeight: 20,
