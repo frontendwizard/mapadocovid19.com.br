@@ -1,4 +1,4 @@
-import { Stack, Heading } from "@chakra-ui/core"
+import { Stack } from "@chakra-ui/core"
 
 import InfoCard from "../InfoCard"
 
@@ -17,29 +17,26 @@ const TotalResults = ({ current, previous }) => {
 	const previousRate = previousDeaths / previousConfirmed
 	const roundRate = (rate) => Math.round(rate * 1000) / 10
 	return (
-		<Stack spacing={2}>
-			<Heading fontSize="lg">Total no Brasil:</Heading>
-			<Stack isInline spacing={4}>
-				<InfoCard
-					color="red"
-					value={confirmed}
-					comparison={confirmed - previousConfirmed}
-					label="CONFIRMADOS"
-				/>
-				<InfoCard
-					color="gray"
-					value={deaths}
-					comparison={deaths - previousDeaths}
-					label="MORTES"
-				/>
-				<InfoCard
-					color="orange"
-					value={roundRate(currentRate)}
-					comparison={roundRate(currentRate - previousRate)}
-					suffix="%"
-					label="MORTALIDADE"
-				/>
-			</Stack>
+		<Stack isInline spacing={4}>
+			<InfoCard
+				color="red"
+				value={confirmed}
+				comparison={confirmed - previousConfirmed}
+				label="CONFIRMADOS"
+			/>
+			<InfoCard
+				color="gray"
+				value={deaths}
+				comparison={deaths - previousDeaths}
+				label="MORTES"
+			/>
+			<InfoCard
+				color="orange"
+				value={roundRate(currentRate)}
+				comparison={roundRate(currentRate - previousRate)}
+				suffix="%"
+				label="MORTALIDADE"
+			/>
 		</Stack>
 	)
 }

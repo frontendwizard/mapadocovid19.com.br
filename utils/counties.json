@@ -1,29 +1,137 @@
-{
-	"AC": "Acre",
-	"AL": "Alagoas",
-	"AM": "Amazonas",
-	"AP": "Amapá",
-	"BA": "Bahia",
-	"CE": "Ceará",
-	"DF": "Distrito Federal",
-	"ES": "Espírito Santo",
-	"GO": "Goiás",
-	"MA": "Maranhão",
-	"MG": "Minas Gerais",
-	"MS": "Mato Grosso do Sul",
-	"MT": "Mato Grosso",
-	"PA": "Pará",
-	"PB": "Paraíba",
-	"PE": "Pernambuco",
-	"PI": "Piauí",
-	"PR": "Paraná",
-	"RJ": "Rio de Janeiro",
-	"RN": "Rio Grande do Norte",
-	"RO": "Rondônia",
-	"RR": "Roraima",
-	"RS": "Rio Grande do Sul",
-	"SC": "Santa Catarina",
-	"SE": "Sergipe",
-	"SP": "São Paulo",
-	"TO": "Tocantins"
-}
+[
+	{
+		"initials": "AC",
+		"name": "Acre",
+		"region": "Norte"
+	},
+	{
+		"initials": "AL",
+		"name": "Alagoas",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "AM",
+		"name": "Amazonas",
+		"region": "Norte"
+	},
+	{
+		"initials": "AP",
+		"name": "Amapá",
+		"region": "Norte"
+	},
+	{
+		"initials": "BA",
+		"name": "Bahia",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "CE",
+		"name": "Ceará",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "DF",
+		"name": "Distrito Federal",
+		"region": "Centro-Oeste"
+	},
+	{
+		"initials": "ES",
+		"name": "Espírito Santo",
+		"region": "Sudeste"
+	},
+	{
+		"initials": "GO",
+		"name": "Goiás",
+		"region": "Centro-Oeste"
+	},
+	{
+		"initials": "MA",
+		"name": "Maranhão",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "MG",
+		"name": "Minas Gerais",
+		"region": "Sudeste"
+	},
+	{
+		"initials": "MS",
+		"name": "Mato Grosso do Sul",
+		"region": "Centro-Oeste"
+	},
+	{
+		"initials": "MT",
+		"name": "Mato Grosso",
+		"region": "Centro-Oeste"
+	},
+	{
+		"initials": "PA",
+		"name": "Pará",
+		"region": "Norte"
+	},
+	{
+		"initials": "PB",
+		"name": "Paraíba",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "PE",
+		"name": "Pernambuco",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "PI",
+		"name": "Piauí",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "PR",
+		"name": "Paraná",
+		"region": "Sul"
+	},
+	{
+		"initials": "RJ",
+		"name": "Rio de Janeiro",
+		"region": "Sudeste"
+	},
+	{
+		"initials": "RN",
+		"name": "Rio Grande do Norte",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "RO",
+		"name": "Rondônia",
+		"region": "Norte"
+	},
+	{
+		"initials": "RR",
+		"name": "Roraima",
+		"region": "Norte"
+	},
+	{
+		"initials": "RS",
+		"name": "Rio Grande do Sul",
+		"region": "Sul"
+	},
+	{
+		"initials": "SC",
+		"name": "Santa Catarina",
+		"region": "Sul"
+	},
+	{
+		"initials": "SE",
+		"name": "Sergipe",
+		"region": "Nordeste"
+	},
+	{
+		"initials": "SP",
+		"name": "São Paulo",
+		"region": "Sudeste"
+	},
+	{
+		"initials": "TO",
+		"name": "Tocantins",
+		"region": "Norte"
+	}
+]

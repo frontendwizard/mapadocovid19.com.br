@@ -7,7 +7,12 @@ import LastUpdateInfo from "../components/LastUpdateInfo"
 import counties from "../utils/counties.json"
 import fetchAllReports from "../utils/fetchAllReports"
 
-const Home = ({ lastReports, previousReports, lastUpdate }) => {
+const Home = ({
+	lastReports,
+	previousReports,
+	lastUpdate,
+	reportsByCounty,
+}) => {
 	return (
 		<div className="container">
 			<Country.Headers />
@@ -18,20 +23,16 @@ const Home = ({ lastReports, previousReports, lastUpdate }) => {
 				margin={[0, "auto"]}
 				spacing={4}
 			>
-				<Stack spacing={2}>
-					<Heading as="h1" fontSize="2xl" my={0}>
-						COVID-19 no Brasil
-					</Heading>
-					<Text fontSize="lg" color="gray.500" my={0}>
-						Selecione um estado para mais detalhes
-					</Text>
-				</Stack>
-				<Country.Map results={lastReports} />
-				<LastUpdateInfo lastUpdate={lastUpdate} />
+				<Heading as="h1" fontSize="2xl" my={0}>
+					COVID-19 no Brasil
+				</Heading>
 				<Country.TotalResults
 					current={lastReports}
 					previous={previousReports}
 				/>
+				<Country.Map results={lastReports} />
+				<LastUpdateInfo lastUpdate={lastUpdate} />
+				<Country.NormalizedConfirmed reportsByCounty={reportsByCounty} />
 				<Stack spacing={2}>
 					<Text fontSize="lg" color="gray.500">
 						Dados por estado:
@@ -61,8 +62,16 @@ export async function getStaticProps() {
 		}
 		return acc
 	}, {})
-	const previousReports = Object.keys(counties).map((s) =>
-		reports.find((report) => report.state === s && !report.is_last)
+	const reportsByCounty = reports.reduce((acc, report) => {
+		if (typeof acc[report.state] === "object") {
+			acc[report.state].push(report)
+		} else {
+			acc[report.state] = [report]
+		}
+		return acc
+	}, {})
+	const previousReports = counties.map(({ initials }) =>
+		reports.find((report) => report.state === initials && !report.is_last)
 	)
 	const { tables } = await fetch(
 		`https://brasil.io/api/dataset/covid19`
@@ -70,6 +79,7 @@ export async function getStaticProps() {
 	return {
 		props: {
 			countrySumByDay,
+			reportsByCounty,
 			lastReports,
 			previousReports,
 			lastUpdate: tables[1].import_date,
