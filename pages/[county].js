@@ -8,17 +8,18 @@ import Footer from "../components/Footer"
 
 import fetchAllReports from "../utils/fetchAllReports"
 import citiesData from "../utils/cities.json"
-import countiesName from "../utils/counties.json"
+import counties from "../utils/counties.json"
 
 const Post = ({
-	counties,
-	cities,
+	countiesReports,
+	citiesReports,
 	countyCitiesHistory,
 	history,
 	lastUpdate,
 }) => {
 	const router = useRouter()
 	const { county } = router.query
+	const { name } = counties.find(({ initials }) => initials === county)
 
 	return (
 		<div className="container">
@@ -30,20 +31,17 @@ const Post = ({
 				margin={[0, "auto"]}
 			>
 				<Heading as="h1" fontSize="2xl" mt={0}>
-					COVID-19 em {countiesName[county]}
+					COVID-19 em {name}
 				</Heading>
-				<Text fontSize="lg" color="gray.500">
-					Selecione uma cidade para mais detalhes
-				</Text>
-				<County.Map results={counties} cities={cities} />
-				<LastUpdateInfo lastUpdate={lastUpdate} />
 				<County.TotalResults history={history} />
+				<County.Map results={countiesReports} cities={citiesReports} />
+				<LastUpdateInfo lastUpdate={lastUpdate} />
 				<Text fontSize="lg" color="gray.500" mt={6}>
 					Dados por cidade:
 				</Text>
 				<County.DataTable
 					countyCitiesHistory={countyCitiesHistory}
-					cities={cities}
+					cities={citiesReports}
 				/>
 				<Footer />
 			</Box>
@@ -55,7 +53,7 @@ export default Post
 
 export async function getStaticProps({ params: { county } }) {
 	// get last update for counties
-	const counties = await fetchAllReports(`is_last=true&place_type=state`)
+	const countiesReports = await fetchAllReports(`is_last=true&place_type=state`)
 	// get last update for all cities in the country for the circles
 	const rawCitiesLastUpdate = await fetchAllReports(
 		`is_last=true&place_type=city`
@@ -64,7 +62,7 @@ export async function getStaticProps({ params: { county } }) {
 	const countyCitiesHistory = await fetchAllReports(
 		`is_last=false&place_type=city&state=${county}`
 	)
-	const cities = rawCitiesLastUpdate
+	const citiesReports = rawCitiesLastUpdate
 		// eslint-disable-next-line camelcase
 		.filter(({ city_ibge_code }) => !!city_ibge_code)
 		.map((result) => {
@@ -81,8 +79,8 @@ export async function getStaticProps({ params: { county } }) {
 	).then((r) => r.json())
 	return {
 		props: {
-			counties,
-			cities,
+			countiesReports,
+			citiesReports,
 			countyCitiesHistory,
 			history,
 			lastUpdate: tables[1].import_date,
@@ -92,7 +90,7 @@ export async function getStaticProps({ params: { county } }) {
 
 export async function getStaticPaths() {
 	return {
-		paths: Object.keys(countiesName).map((county) => ({ params: { county } })),
+		paths: counties.map(({ initials }) => ({ params: { county: initials } })),
 		fallback: false,
 	}
 }

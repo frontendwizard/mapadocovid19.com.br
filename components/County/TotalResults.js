@@ -1,8 +1,6 @@
-import { Stack, Heading, Box } from "@chakra-ui/core"
+import { Stack } from "@chakra-ui/core"
 
 import InfoCard from "../InfoCard"
-import countiesName from "../../utils/counties.json"
-
 const TotalResults = ({ history }) => {
 	const mostRecent = history[0]
 	const previous = history[1]
@@ -10,33 +8,28 @@ const TotalResults = ({ history }) => {
 	const rateComparison = roundRate(mostRecent.death_rate - previous.death_rate)
 	const deathComparison = mostRecent.deaths - previous.deaths
 	return (
-		<Box>
-			<Heading fontSize="lg">
-				Total no estado de {countiesName[mostRecent.state]}:
-			</Heading>
-			<Stack isInline spacing={4}>
-				<InfoCard
-					color="red"
-					value={mostRecent.confirmed}
-					comparison={mostRecent.confirmed - previous.confirmed}
-					label="CONFIRMADOS"
-				/>
-				<InfoCard
-					color="gray"
-					value={mostRecent.deaths}
-					comparison={deathComparison}
-					label="MORTES"
-				/>
+		<Stack isInline spacing={4}>
+			<InfoCard
+				color="red"
+				value={mostRecent.confirmed}
+				comparison={mostRecent.confirmed - previous.confirmed}
+				label="CONFIRMADOS"
+			/>
+			<InfoCard
+				color="gray"
+				value={mostRecent.deaths}
+				comparison={deathComparison}
+				label="MORTES"
+			/>
 
-				<InfoCard
-					color="orange"
-					value={roundRate(mostRecent.death_rate)}
-					comparison={rateComparison}
-					suffix="%"
-					label="MORTALIDADE"
-				/>
-			</Stack>
-		</Box>
+			<InfoCard
+				color="orange"
+				value={roundRate(mostRecent.death_rate)}
+				comparison={rateComparison}
+				suffix="%"
+				label="MORTALIDADE"
+			/>
+		</Stack>
 	)
 }
 
