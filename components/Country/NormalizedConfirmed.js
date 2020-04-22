@@ -169,7 +169,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 					enableSlices="x"
 					enableGridX={false}
 					lineWidth={2}
-					enablePoints={false}
+					pointSize={4}
 					animate={animate}
 					curve="monotoneX"
 					legends={[
