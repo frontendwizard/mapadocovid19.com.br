@@ -1,66 +1,71 @@
 {
-  "name": "mapadocovid19.com.br",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint . --cache --fix",
-    "pretest": "npm run lint",
-    "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
-    "posttest": "npm run format"
-  },
-  "dependencies": {
-    "@chakra-ui/core": "^0.7.0",
-    "@emotion/core": "^10.0.28",
-    "@emotion/styled": "^10.0.27",
-    "@nivo/core": "^0.61.0",
-    "@nivo/geo": "^0.61.1",
-    "@nivo/line": "^0.61.1",
-    "@vx/axis": "^0.0.195",
-    "@vx/curve": "^0.0.195",
-    "@vx/geo": "^0.0.195",
-    "@vx/glyph": "^0.0.195",
-    "@vx/group": "^0.0.195",
-    "@vx/legend": "^0.0.195",
-    "@vx/responsive": "^0.0.195",
-    "@vx/scale": "^0.0.195",
-    "@vx/shape": "^0.0.195",
-    "@vx/tooltip": "^0.0.195",
-    "d3-geo": "^1.11.9",
-    "d3-interpolate": "^1.4.0",
-    "date-fns": "^2.11.1",
-    "emotion-theming": "^10.0.27",
-    "isomorphic-fetch": "^2.2.1",
-    "next": "9.3.4",
-    "normalize.css": "^8.0.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-table": "^7.0.4",
-    "topojson": "^3.0.2"
-  },
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-standard": "^4.0.1",
-    "husky": ">=4",
-    "lint-staged": ">=10",
-    "prettier": "^2.0.2"
-  },
-  "license": "MIT",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
-  }
+	"name": "mapadocovid19.com.br",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint . --cache --fix",
+		"pretest": "npm run lint",
+		"format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
+		"posttest": "npm run format",
+		"storybook": "start-storybook -p 6006",
+		"build-storybook": "build-storybook"
+	},
+	"dependencies": {
+		"@chakra-ui/core": "^0.7.0",
+		"@emotion/core": "^10.0.28",
+		"@emotion/styled": "^10.0.27",
+		"@nivo/core": "^0.61.0",
+		"@nivo/geo": "^0.61.1",
+		"@nivo/line": "^0.61.1",
+		"@vx/vx": "^0.0.196",
+		"date-fns": "^2.11.1",
+		"emotion-theming": "^10.0.27",
+		"framer-motion": "^1.10.3",
+		"isomorphic-fetch": "^2.2.1",
+		"next": "9.4.0",
+		"normalize.css": "^8.0.1",
+		"react": "16.13.1",
+		"react-dom": "16.13.1",
+		"react-table": "^7.0.4",
+		"topojson": "^3.0.2"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.9.6",
+		"@storybook/addon-actions": "^5.3.18",
+		"@storybook/addon-links": "^5.3.18",
+		"@storybook/addons": "^5.3.18",
+		"@storybook/preset-typescript": "^3.0.0",
+		"@storybook/react": "^5.3.18",
+		"@types/node": "^13.13.5",
+		"@types/react": "^16.9.34",
+		"awesome-typescript-loader": "^5.2.1",
+		"babel-loader": "^8.1.0",
+		"eslint": "^6.8.0",
+		"eslint-config-prettier": "^6.10.1",
+		"eslint-config-standard": "^14.1.1",
+		"eslint-plugin-import": "^2.20.2",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^4.2.1",
+		"eslint-plugin-react": "^7.19.0",
+		"eslint-plugin-standard": "^4.0.1",
+		"husky": ">=4",
+		"lint-staged": ">=10",
+		"prettier": "^2.0.2",
+		"react-docgen-typescript-loader": "^3.7.2",
+		"ts-loader": "^7.0.2",
+		"typescript": "^3.8.3"
+	},
+	"license": "MIT",
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.js": "eslint --cache --fix",
+		"*.{js,css,md}": "prettier --write"
+	}
 }
