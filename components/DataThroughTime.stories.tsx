@@ -38,11 +38,14 @@ const FetchData = ({ children }) => {
 }
 
 export const confirmed = () => {
+	const [highlightIndex, setHighlightIndex] = React.useState(0)
 	return (
 		<ThemeProvider theme={theme}>
 			<FetchData>
 				{(data) => (
 					<DataThroughTime
+						highlightedIndex={highlightIndex}
+						setHighlightedIndex={setHighlightIndex}
 						title="Confirmados"
 						data={data.map(({ date, confirmed }) => ({
 							date,
@@ -58,11 +61,14 @@ export const confirmed = () => {
 }
 
 export const confirmedPer100k = () => {
+	const [highlightIndex, setHighlightIndex] = React.useState(0)
 	return (
 		<ThemeProvider theme={theme}>
 			<FetchData>
 				{(data) => (
 					<DataThroughTime
+						highlightedIndex={highlightIndex}
+						setHighlightedIndex={setHighlightIndex}
 						title="Confirmados a cada 100k habitantes"
 						data={data.map(({ date, confirmedPer100k }) => ({
 							date,
@@ -78,11 +84,14 @@ export const confirmedPer100k = () => {
 }
 
 export const deaths = () => {
+	const [highlightIndex, setHighlightIndex] = React.useState(0)
 	return (
 		<ThemeProvider theme={theme}>
 			<FetchData>
 				{(data) => (
 					<DataThroughTime
+						highlightedIndex={highlightIndex}
+						setHighlightedIndex={setHighlightIndex}
 						title="Mortes"
 						data={data.map(({ date, deaths }) => ({ date, value: deaths }))}
 						color="gray"
@@ -95,11 +104,14 @@ export const deaths = () => {
 }
 
 export const deathRate = () => {
+	const [highlightIndex, setHighlightIndex] = React.useState(0)
 	return (
 		<ThemeProvider theme={theme}>
 			<FetchData>
 				{(data) => (
 					<DataThroughTime
+						highlightedIndex={highlightIndex}
+						setHighlightedIndex={setHighlightIndex}
 						title="Taxa de Mortalidade"
 						data={data.map(({ date, deaths, confirmed }) => ({
 							date,
