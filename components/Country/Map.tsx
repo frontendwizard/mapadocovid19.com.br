@@ -3,6 +3,7 @@ import { scaleLinear } from "@vx/scale"
 import { Mercator } from "@vx/geo"
 import { LegendLinear, LegendItem, LegendLabel } from "@vx/legend"
 import * as topojson from "topojson"
+import { Topology, GeometryCollection } from "topojson-specification"
 import { Text, Flex, Box, Tooltip, Link as ChakraLink } from "@chakra-ui/core"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
@@ -26,10 +27,16 @@ const State = styled.path`
 `
 
 const Map = ({ results }) => {
-	const brazil = topojson.feature(topology, topology.objects.states)
-	const outline = topojson.mesh(topology, topology.objects.states)
+	const brazil = topojson.feature(
+		topology as Topology<{ states: GeometryCollection<{ nome: string }> }>,
+		topology.objects.states as GeometryCollection<{ nome: string }>
+	)
+	const outline = topojson.mesh(
+		topology as Topology<{ states: GeometryCollection<{ nome: string }> }>,
+		topology.objects.states as GeometryCollection<{ nome: string }>
+	)
 	const colorScale = scaleLinear({
-		domain: [0, Math.max(...results.map((r) => r.confirmed))],
+		domain: [0, Math.max(...results.map((r) => r.last_available_confirmed))],
 		range: ["white", "red"],
 	})
 	const offset = 0
@@ -52,7 +59,10 @@ const Map = ({ results }) => {
 								mercator.features.sort((a, b) => {
 									const countyA = results.find((r) => r.state === a.feature.id)
 									const countyB = results.find((r) => r.state === b.feature.id)
-									return countyB.confirmed - countyA.confirmed
+									return (
+										countyB.last_available_confirmed -
+										countyA.last_available_confirmed
+									)
 								})
 								return (
 									<g>
@@ -61,7 +71,8 @@ const Map = ({ results }) => {
 											return (
 												<Tooltip
 													key={f.id}
-													label={`${county.state} (${county.confirmed} confirmados, ${county.deaths} mortes)`}
+													label={`${county.state} (${county.last_available_confirmed} confirmados, ${county.last_available_deaths} mortes)`}
+													aria-label={`${county.state} (${county.last_available_confirmed} confirmados, ${county.last_available_deaths} mortes)`}
 													placement="top"
 													hasArrow
 												>
@@ -69,7 +80,9 @@ const Map = ({ results }) => {
 														<Link href="/[county]" as={`/${f.id}`}>
 															<ChakraLink href={`/${f.id}`}>
 																<State
-																	fill={colorScale(county.confirmed)}
+																	fill={colorScale(
+																		county.last_available_confirmed
+																	)}
 																	d={mercator.path(f)}
 																/>
 															</ChakraLink>
@@ -111,7 +124,7 @@ const Map = ({ results }) => {
 								</Flex>
 								<LegendLabel>
 									<Text m={0} fontSize="xs">
-										{Math.round(label.text)} casos confirmados
+										{label.text} casos confirmados
 									</Text>
 								</LegendLabel>
 							</LegendItem>

@@ -9,12 +9,14 @@ import {
 	Box,
 	RadioButtonGroup,
 	Checkbox,
+	ButtonProps,
+	RadioProps,
 } from "@chakra-ui/core"
 
 import counties from "../../utils/counties.json"
 
-const RadioButton = forwardRef((props, ref) => {
-	const { isChecked, isDisabled, value, ...rest } = props
+const RadioButton = forwardRef<ButtonProps, RadioProps>((props, ref) => {
+	const { children, isChecked, isDisabled, value, ...rest } = props
 	return (
 		<Button
 			ref={ref}
@@ -24,12 +26,14 @@ const RadioButton = forwardRef((props, ref) => {
 			role="radio"
 			isDisabled={isDisabled}
 			{...rest}
-		/>
+		>
+			{children}
+		</Button>
 	)
 })
 
 const NormalizedConfirmed = ({ reportsByCounty }) => {
-	const [selectedChart, setSelectedChart] = useState("topConfirmed")
+	const [selectedChart, setSelectedChart] = useState("topConfirmedPerHundred")
 	const [animate, setAnimate] = useState(true)
 	// workaround of chart animation issue when toggling back from time scale
 	useEffect(() => {
@@ -42,12 +46,16 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 			const firstDay = new Date(reports[reports.length - 1].date)
 			return {
 				id: initials,
-				confirmed: reports[0].confirmed,
-				confirmedPer100K: reports[0].confirmed_per_100k_inhabitants,
+				confirmed: reports[0].last_available_confirmed,
+				confirmedPer100K:
+					reports[0].last_available_confirmed_per_100k_inhabitants,
 				region,
 				data: reports
 					.map(
-						({ confirmed_per_100k_inhabitants: confirmedPer100K, date }) => ({
+						({
+							last_available_confirmed_per_100k_inhabitants: confirmedPer100K,
+							date,
+						}) => ({
 							x: fromFirstCaseDate
 								? differenceInCalendarDays(new Date(date), new Date(firstDay))
 								: date,
@@ -98,28 +106,6 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 		{ value: "Sul", label: "Região Sul" },
 	]
 
-	const fromFirstCaseDateChartOptions = {
-		axisBottom: {
-			legend: "dias a partir do primeiro caso confirmado",
-			legendPosition: "middle",
-			legendOffset: 35,
-		},
-		xScale: { type: "linear" },
-	}
-
-	const dateChartOptions = {
-		axisBottom: {
-			format: (v) => format(new Date(v), "dd/MM"),
-			tickValues: "every 2 days",
-			tickRotation: 45,
-			legend: "data",
-			legendPosition: "middle",
-			legendOffset: 40,
-		},
-
-		xScale: { type: "time", format: "%Y-%m-%d", precision: "day" },
-		xFormat: "time:%Y-%m-%d",
-	}
 	return (
 		<Stack spacing={2}>
 			<Heading as="h2" fontSize="2xl">
@@ -127,7 +113,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 			</Heading>
 			<RadioButtonGroup
 				defaultValue="topConfirmedPerHundred"
-				onChange={(val) => setSelectedChart(val)}
+				onChange={(val: string) => setSelectedChart(val)}
 				spacing={2}
 				isInline
 			>
@@ -152,50 +138,111 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
 				<Text as="span">mostrar casos a partir da data do primeiro caso</Text>
 			</Checkbox>
 			<Box height={[250, 350]}>
-				<ResponsiveLine
-					data={data}
-					axisLeft={{
-						legend: "casos / 100k habitantes",
-						legendPosition: "middle",
-						legendOffset: -35,
-					}}
-					yScale={{ type: "linear" }}
-					yFormat={(value) => `${Math.round(value * 100) / 100} casos`}
-					{...(fromFirstCaseDate
-						? fromFirstCaseDateChartOptions
-						: dateChartOptions)}
-					margin={{ top: 10, right: 10, bottom: 80, left: 50 }}
-					colors={{ scheme: "category10" }}
-					enableSlices="x"
-					enableGridX={false}
-					lineWidth={2}
-					pointSize={4}
-					animate={animate}
-					curve="monotoneX"
-					legends={[
-						{
-							anchor: "bottom",
-							direction: "row",
-							itemDirection: "left-to-right",
-							itemWidth: 30,
-							itemHeight: 20,
-							itemsSpacing: 2,
-							symbolSpacing: 2,
-							symbolSize: 10,
-							symbolShape: "circle",
-							translateY: 70,
-							effects: [
-								{
-									on: "hover",
-									style: {
-										itemBackground: "rgba(0, 0, 0, .03)",
-										itemOpacity: 1,
+				{fromFirstCaseDate ? (
+					<ResponsiveLine
+						data={data}
+						axisBottom={{
+							legend: "dias a partir do primeiro caso confirmado",
+							legendPosition: "middle",
+							legendOffset: 35,
+						}}
+						xScale={{ type: "linear" }}
+						yScale={{ type: "linear" }}
+						yFormat={(value: number) =>
+							`${Math.round(value * 100) / 100} casos`
+						}
+						curve="monotoneX"
+						colors={{ scheme: "category10" }}
+						axisLeft={{
+							legend: "casos / 100k habitantes",
+							legendPosition: "middle",
+							legendOffset: -35,
+						}}
+						margin={{ top: 10, right: 10, bottom: 80, left: 50 }}
+						enableSlices="x"
+						enableGridX={false}
+						lineWidth={2}
+						pointSize={4}
+						animate
+						legends={[
+							{
+								anchor: "bottom",
+								direction: "row",
+								itemDirection: "left-to-right",
+								itemWidth: 30,
+								itemHeight: 20,
+								itemsSpacing: 2,
+								symbolSpacing: 2,
+								symbolSize: 10,
+								symbolShape: "circle",
+								translateY: 70,
+								effects: [
+									{
+										on: "hover",
+										style: {
+											itemBackground: "rgba(0, 0, 0, .03)",
+											itemOpacity: 1,
+										},
 									},
-								},
-							],
-						},
-					]}
-				/>
+								],
+							},
+						]}
+					/>
+				) : (
+					<ResponsiveLine
+						data={data}
+						axisBottom={{
+							format: (v) => format(new Date(v), "dd/MM"),
+							tickValues: "every 2 days",
+							tickRotation: 45,
+							legend: "data",
+							legendPosition: "middle",
+							legendOffset: 40,
+						}}
+						xScale={{ type: "time", format: "%Y-%m-%d", precision: "day" }}
+						xFormat="time:%Y-%m-%d"
+						yScale={{ type: "linear" }}
+						yFormat={(value: number) =>
+							`${Math.round(value * 100) / 100} casos`
+						}
+						curve="monotoneX"
+						colors={{ scheme: "category10" }}
+						axisLeft={{
+							legend: "casos / 100k habitantes",
+							legendPosition: "middle",
+							legendOffset: -35,
+						}}
+						margin={{ top: 10, right: 10, bottom: 80, left: 50 }}
+						enableSlices="x"
+						enableGridX={false}
+						lineWidth={2}
+						pointSize={4}
+						animate
+						legends={[
+							{
+								anchor: "bottom",
+								direction: "row",
+								itemDirection: "left-to-right",
+								itemWidth: 30,
+								itemHeight: 20,
+								itemsSpacing: 2,
+								symbolSpacing: 2,
+								symbolSize: 10,
+								symbolShape: "circle",
+								translateY: 70,
+								effects: [
+									{
+										on: "hover",
+										style: {
+											itemBackground: "rgba(0, 0, 0, .03)",
+											itemOpacity: 1,
+										},
+									},
+								],
+							},
+						]}
+					/>
+				)}
 			</Box>
 		</Stack>
 	)

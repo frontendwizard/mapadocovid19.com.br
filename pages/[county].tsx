@@ -1,6 +1,6 @@
-import fetch from "isomorphic-fetch"
-import { Heading, Text, Box } from "@chakra-ui/core"
+import { Stack, Flex, Image, Heading, Text, Box } from "@chakra-ui/core"
 import { useRouter } from "next/router"
+import fetch from "isomorphic-fetch"
 
 import * as County from "../components/County"
 import LastUpdateInfo from "../components/LastUpdateInfo"
@@ -10,78 +10,83 @@ import fetchAllReports from "../utils/fetchAllReports"
 import citiesData from "../utils/cities.json"
 import counties from "../utils/counties.json"
 
-const Post = ({
-	countiesReports,
-	citiesReports,
-	countyCitiesHistory,
-	history,
-	lastUpdate,
-}) => {
+const CountyPage = ({ citiesReports, history, lastUpdate }) => {
 	const router = useRouter()
 	const { county } = router.query
 	const { name } = counties.find(({ initials }) => initials === county)
 
 	return (
-		<div className="container">
+		<>
 			<County.Headers />
-			<Box
+			<Stack
 				as="main"
 				padding={4}
-				width={["100%", 3 / 4, "700px"]}
+				width={["100%", 3 / 4, "700px", "1000px"]}
 				margin={[0, "auto"]}
+				spacing={4}
 			>
-				<Heading as="h1" fontSize="2xl" mt={0}>
-					COVID-19 em {name}
-				</Heading>
-				<County.TotalResults history={history} />
-				<County.Map results={countiesReports} cities={citiesReports} />
-				<LastUpdateInfo lastUpdate={lastUpdate} />
-				<Text fontSize="lg" color="gray.500" mt={6}>
-					Dados por cidade:
-				</Text>
-				<County.DataTable
-					countyCitiesHistory={countyCitiesHistory}
-					cities={citiesReports}
+				<Image
+					objectFit="contain"
+					h={[24, 32]}
+					src="covidnobrasil-wide.svg"
+					alt="logo da covidnobrasil.live"
 				/>
+				<Heading as="h1" fontSize="2xl" fontWeight="bold" textAlign="center">
+					{name}
+				</Heading>
+				<Flex justify="center" align="center" wrap="wrap">
+					<Box flexBasis={["100%", "50%"]} mb={[4, 0]} mr={[0, 4]}>
+						<County.Map cities={citiesReports} />
+					</Box>
+					<Box flexBasis={["100%", "40%"]}>
+						<County.TotalResults data={history} />
+					</Box>
+				</Flex>
+				<LastUpdateInfo lastUpdate={lastUpdate} />
+				<Stack spacing={2}>
+					<Text fontSize="lg" color="gray.500" mt={6}>
+						Dados por cidade:
+					</Text>
+					<County.DataTable cities={citiesReports} />
+				</Stack>
 				<Footer />
-			</Box>
-		</div>
+			</Stack>
+		</>
 	)
 }
 
-export default Post
+export default CountyPage
 
 export async function getStaticProps({ params: { county } }) {
-	// get last update for counties
-	const countiesReports = await fetchAllReports(`is_last=true&place_type=state`)
-	// get last update for all cities in the country for the circles
+	// // get last update for all cities in the country for the circles
+	console.log(`fetching last reports for cities...`)
 	const rawCitiesLastUpdate = await fetchAllReports(
 		`is_last=true&place_type=city`
 	)
-	// get previous update for cities in the county
-	const countyCitiesHistory = await fetchAllReports(
-		`is_last=false&place_type=city&state=${county}`
-	)
+	console.log(`fetched ${rawCitiesLastUpdate.length} items`)
+	console.log(`adding coords to cities last update...`)
 	const citiesReports = rawCitiesLastUpdate
 		// eslint-disable-next-line camelcase
 		.filter(({ city_ibge_code }) => !!city_ibge_code)
 		.map((result) => {
 			const { latitude: lat, longitude: lon } = citiesData.find(
-				(m) => `${m.codigo_ibge}` === result.city_ibge_code
+				(m) => m.codigo_ibge === result.city_ibge_code
 			)
 			return { ...result, coords: { lat, lon } }
 		})
 	// get county history
+	console.log(`fetching all reports for ${county}...`)
 	const history = await fetchAllReports(`place_type=state&state=${county}`)
+	console.log(`fetched ${history.length} items`)
 	// get last update info
+	console.log(`fetching timestamp...`)
 	const { tables } = await fetch(
 		`https://brasil.io/api/dataset/covid19`
 	).then((r) => r.json())
+	console.log(`timestamp: ${tables[1].import_date}`)
 	return {
 		props: {
-			countiesReports,
 			citiesReports,
-			countyCitiesHistory,
 			history,
 			lastUpdate: tables[1].import_date,
 		},

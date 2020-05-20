@@ -1,8 +1,8 @@
 import fetch from "isomorphic-fetch"
 
-const fetchAllReportsByType = async (params) => {
+const fetchAllReportsByType = async (params: string, dataset = "caso_full") => {
 	const { count, next, results: firstPage } = await fetch(
-		`https://brasil.io/api/dataset/covid19/caso/data?${params}`
+		`https://brasil.io/api/dataset/covid19/${dataset}/data?${params}`
 	).then((r) => r.json())
 
 	if (!next) return firstPage
@@ -12,7 +12,7 @@ const fetchAllReportsByType = async (params) => {
 	const remainingPages = await Promise.all(
 		Array.from(Array(pages - 1).keys()).map((page) =>
 			fetch(
-				`https://brasil.io/api/dataset/covid19/caso/data?page=${
+				`https://brasil.io/api/dataset/covid19/${dataset}/data?page=${
 					page + 2
 				}&${params}`
 			).then((r) => r.json())

@@ -1,4 +1,4 @@
-import { Stack, Heading, Text } from "@chakra-ui/core"
+import { Stack, Flex, Text, Image, Box } from "@chakra-ui/core"
 import fetch from "isomorphic-fetch"
 
 import * as Country from "../components/Country"
@@ -12,25 +12,33 @@ const Home = ({
 	previousReports,
 	lastUpdate,
 	reportsByCounty,
+	countrySumByDay,
 }) => {
 	return (
-		<div className="container">
+		<>
 			<Country.Headers />
 			<Stack
 				as="main"
 				padding={4}
-				width={["100%", 3 / 4, "700px"]}
+				width={["full", 3 / 4, "700px", "1000px"]}
+				maxW="full"
 				margin={[0, "auto"]}
 				spacing={4}
 			>
-				<Heading as="h1" fontSize="2xl" my={0}>
-					COVID-19 no Brasil
-				</Heading>
-				<Country.TotalResults
-					current={lastReports}
-					previous={previousReports}
+				<Image
+					objectFit="contain"
+					h={[24, 32]}
+					src="covidnobrasil-wide.svg"
+					alt="logo da covidnobrasil.live"
 				/>
-				<Country.Map results={lastReports} />
+				<Flex justify="center" align="center" wrap="wrap">
+					<Box flexBasis={["100%", "50%"]} mb={[4, 0]} mr={[0, 4]}>
+						<Country.Map results={lastReports} />
+					</Box>
+					<Box flexBasis={["100%", "40%"]}>
+						<Country.TotalResults data={countrySumByDay} />
+					</Box>
+				</Flex>
 				<LastUpdateInfo lastUpdate={lastUpdate} />
 				<Country.NormalizedConfirmed reportsByCounty={reportsByCounty} />
 				<Stack spacing={2}>
@@ -44,24 +52,39 @@ const Home = ({
 				</Stack>
 				<Footer />
 			</Stack>
-		</div>
+		</>
 	)
 }
+
 export async function getStaticProps() {
 	const reports = await fetchAllReports(`place_type=state`)
 	const lastReports = reports.filter(({ is_last: isLast }) => isLast)
-	const countrySumByDay = reports.reduce((acc, report) => {
-		if (typeof acc[report.date] === "object") {
-			acc[report.date].confirmed += report.confirmed
-			acc[report.date].deaths += report.deaths
+	const countrySumByDay = reports.reduce((acc, item) => {
+		const index = acc.indexOf(acc.find((i) => i.date === item.date))
+		if (index >= 0) {
+			acc[index].deaths += item.last_available_deaths
+			acc[index].confirmed += item.last_available_confirmed
+			acc[index].confirmedPer100k +=
+				item.last_available_confirmed_per_100k_inhabitants
 		} else {
-			acc[report.date] = {
-				confirmed: report.confirmed,
-				deaths: report.deaths,
-			}
+			acc.push({
+				date: item.date,
+				deaths: item.last_available_deaths,
+				confirmed: item.last_available_confirmed,
+				confirmedPer100k: item.last_available_confirmed_per_100k_inhabitants,
+			})
 		}
 		return acc
-	}, {})
+	}, [])
+	const countryNewCasesByDay = countrySumByDay.map((day, i) => {
+		const previousDay =
+			i !== 0 ? countrySumByDay[i - 1] : { confirmed: 0, deaths: 0 }
+		return {
+			date: day.date,
+			confirmed: day.confirmed - previousDay.confirmed,
+			deaths: day.deaths - previousDay.deaths,
+		}
+	})
 	const reportsByCounty = reports.reduce((acc, report) => {
 		if (typeof acc[report.state] === "object") {
 			acc[report.state].push(report)
@@ -79,6 +102,7 @@ export async function getStaticProps() {
 	return {
 		props: {
 			countrySumByDay,
+			countryNewCasesByDay,
 			reportsByCounty,
 			lastReports,
 			previousReports,
