@@ -13,12 +13,12 @@ const CountiesTable = ({ previousReports, lastReports }) => {
 			{ Header: "estado", accessor: "state" },
 			{
 				Header: "casos",
-				id: "confirmed",
+				id: "last_available_confirmed",
 				// eslint-disable-next-line react/display-name
-				accessor: ({ confirmed, state }) => {
+				accessor: ({ last_available_confirmed: confirmed, state }) => {
 					const previousConfirmed = previousReports.find(
 						(uf) => uf.state === state
-					).confirmed
+					).last_available_confirmed
 					return (
 						<>
 							<Text as="span">{confirmed}</Text>
@@ -34,12 +34,12 @@ const CountiesTable = ({ previousReports, lastReports }) => {
 			},
 			{
 				Header: "mortes",
-				id: "deaths",
+				id: "last_available_deaths",
 				// eslint-disable-next-line react/display-name
-				accessor: ({ deaths, state }) => {
+				accessor: ({ last_available_deaths: deaths, state }) => {
 					const previousDeaths = previousReports.find(
 						(uf) => uf.state === state
-					).deaths
+					).last_available_deaths
 					return (
 						<>
 							<Text as="span">{deaths}</Text>
@@ -56,10 +56,10 @@ const CountiesTable = ({ previousReports, lastReports }) => {
 			{
 				Header: "mortalidade",
 				// eslint-disable-next-line camelcase
-				accessor: ({ death_rate }) =>
+				accessor: ({ last_available_death_rate: death_rate }) =>
 					// eslint-disable-next-line camelcase
 					death_rate ? `${Math.round(death_rate * 1000) / 10}%` : "0%",
-				id: "death_rate",
+				id: "last_available_death_rate",
 				sortDescFirst: true,
 			},
 		],

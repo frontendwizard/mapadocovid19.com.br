@@ -1,8 +1,9 @@
 import { ParentSize } from "@vx/responsive"
-import { scaleLinear } from "@vx/scale"
+import { scaleLog, scaleLinear } from "@vx/scale"
 import { Mercator } from "@vx/geo"
 import { LegendSize, LegendItem, LegendLabel } from "@vx/legend"
 import * as topojson from "topojson"
+import { Topology, GeometryCollection } from "topojson-specification"
 import { Text, Flex, Box, Link as ChakraLink, Tooltip } from "@chakra-ui/core"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
@@ -27,24 +28,30 @@ const State = styled.path`
 	${selectedStyles}
 `
 
-const Cities = ({ cities, projection, scale, isTabbable }) => {
-	cities.sort((a, b) => b.confirmed - a.confirmed)
+const Cities = ({ cities, projection, scale, isTabbable = false }) => {
+	cities.sort((a, b) => b.last_available_confirmed - a.last_available_confirmed)
 	return (
 		<g>
 			{cities.map((city) => {
 				const position = projection([city.coords.lon, city.coords.lat])
+				const radius = scale(city.last_available_confirmed)
+				if (Number.isNaN(radius)) {
+					return null
+				}
 				return (
 					<Tooltip
 						key={city.city_ibge_code}
-						label={`${city.city} (${city.confirmed} confirmados, ${city.deaths} mortes)`}
+						label={`${city.city} (${city.last_available_confirmed} confirmados, ${city.last_available_deaths} mortes)`}
+						aria-label={`${city.city} (${city.last_available_confirmed} confirmados, ${city.last_available_deaths} mortes)`}
 						hasArrow
 					>
 						<Box as="g" tabIndex={isTabbable ? 0 : -1}>
 							<circle
 								cx={position[0]}
 								cy={position[1]}
-								r={scale(city.confirmed)}
+								r={scale(city.last_available_confirmed)}
 								fill="red"
+								stroke="black"
 								opacity={0.35}
 							/>
 						</Box>
@@ -58,17 +65,21 @@ const Cities = ({ cities, projection, scale, isTabbable }) => {
 const Map = ({ cities }) => {
 	const router = useRouter()
 	const { county } = router.query
-	const world = topojson.feature(topology, topology.objects.states)
-	const radiusScale = scaleLinear({
-		domain: [1, 10, 100, 1000],
-		range: [2, 4, 6, 10],
+	const brazil = topojson.feature(
+		topology as Topology<{ states: GeometryCollection<{ nome: string }> }>,
+		topology.objects.states as GeometryCollection<{ nome: string }>
+	)
+	const radiusScale = scaleLog({
+		domain: [1, 10000],
+		range: [2, 20],
 	})
+
 	const offset = 25
 	useEscToNavigateBack(router)
 
 	return (
 		<Box height={[350, 475, 600]} mt={8} position="relative">
-			<Text position="absolute" t={0} l={0}>
+			<Text position="absolute" top={0} left={0}>
 				<Link href="/" replace>
 					<ChakraLink href="/">Voltar</ChakraLink>
 				</Link>
@@ -77,13 +88,13 @@ const Map = ({ cities }) => {
 				{({ width: w, height: h }) => (
 					<svg width={w} height={h}>
 						<Mercator
-							data={world.features}
+							data={brazil.features}
 							fitExtent={[
 								[
 									[offset, offset],
 									[w - offset, h - offset],
 								],
-								world.features.find((f) => f.id === county),
+								brazil.features.find((f) => f.id === county),
 							]}
 						>
 							{(mercator) => {
@@ -103,9 +114,6 @@ const Map = ({ cities }) => {
 										/>
 										<Cities
 											cities={cities.filter((city) => city.state === county)}
-											citiesOutsideCounty={cities.filter(
-												(city) => city.state !== county
-											)}
 											projection={
 												mercator.features.find((f) => f.feature.id === county)
 													.projection
@@ -148,13 +156,14 @@ const Map = ({ cities }) => {
 											cy={label.value}
 											r={label.value}
 											fill="red"
+											stroke="black"
 											opacity={0.35}
 										/>
 									</svg>
 								</Flex>
 								<LegendLabel>
 									<Text m={0} fontSize="xs">
-										{Math.round(label.text)}
+										{label.text}
 									</Text>
 								</LegendLabel>
 							</LegendItem>

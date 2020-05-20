@@ -14,7 +14,10 @@ const Table = ({ columns, data }) => {
 			columns,
 			data,
 			initialState: {
-				sortBy: useMemo(() => [{ id: "confirmed", desc: true }], []),
+				sortBy: useMemo(
+					() => [{ id: "last_available_confirmed", desc: true }],
+					[]
+				),
 			},
 		},
 		useSortBy
