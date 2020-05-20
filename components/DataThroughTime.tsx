@@ -25,6 +25,8 @@ interface Props {
 	data: Item[]
 	color: string
 	title: string
+	highlightedIndex: number
+	setHighlightedIndex: (value: number) => void
 	tickFormat?: (value: number) => string
 	labelFormat?: (value: number) => string
 }
@@ -43,8 +45,9 @@ const DataThroughTime: React.FC<Props> = ({
 	title,
 	tickFormat = (value) => value,
 	labelFormat = (value) => value,
+	highlightedIndex,
+	setHighlightedIndex,
 }) => {
-	const [activeIndex, setActiveIndex] = useState(0)
 	const margin = { left: 24, right: 48, top: 24, bottom: 24 }
 	return (
 		<Stack spacing={2} bg={`${color}.100`} rounded="md">
@@ -67,7 +70,7 @@ const DataThroughTime: React.FC<Props> = ({
 							const d0 = data.find(
 								(d) => d.date === format(x0, "yyyy-MM-dd", { locale: pt })
 							)
-							d0 && setActiveIndex(data.indexOf(d0))
+							d0 && setHighlightedIndex(data.indexOf(d0))
 						}
 						return (
 							<Box position="relative">
@@ -76,12 +79,16 @@ const DataThroughTime: React.FC<Props> = ({
 										{title}
 									</Heading>
 									<Heading fontSize="xs" margin={0} color={`${color}.300`}>
-										{format(new Date(data[activeIndex].date), "dd 'de' MMMM", {
-											locale: pt,
-										})}
+										{format(
+											new Date(data[highlightedIndex].date),
+											"dd 'de' MMMM",
+											{
+												locale: pt,
+											}
+										)}
 									</Heading>
 									<Heading fontSize="xl" margin={0} color={`${color}.500`}>
-										{labelFormat(data[activeIndex].value)}
+										{labelFormat(data[highlightedIndex].value)}
 									</Heading>
 								</Box>
 								<svg width={width} height={height}>
@@ -107,7 +114,7 @@ const DataThroughTime: React.FC<Props> = ({
 												cx={xScale(new Date(d.date))}
 												cy={yScale(d.value)}
 												fill={color}
-												r={activeIndex === i ? 5 : 2}
+												r={highlightedIndex === i ? 5 : 2}
 											/>
 										))}
 									</Group>
@@ -150,7 +157,7 @@ const DataThroughTime: React.FC<Props> = ({
 										onTouchStart={handleHover}
 										onTouchMove={handleHover}
 										onMouseMove={handleHover}
-										onMouseLeave={() => setActiveIndex(0)}
+										onMouseLeave={() => setHighlightedIndex(0)}
 									/>
 								</svg>
 							</Box>
