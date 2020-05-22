@@ -5,6 +5,7 @@ import fetch from "isomorphic-fetch"
 import * as County from "../components/County"
 import LastUpdateInfo from "../components/LastUpdateInfo"
 import Footer from "../components/Footer"
+import PageHeader from "../components/PageHeader"
 
 import fetchAllReports from "../utils/fetchAllReports"
 import citiesData from "../utils/cities.json"
@@ -25,12 +26,9 @@ const CountyPage = ({ citiesReports, history, lastUpdate }) => {
 				margin={[0, "auto"]}
 				spacing={4}
 			>
-				<Image
-					objectFit="contain"
-					h={[24, 32]}
-					src="covidnobrasil-wide.svg"
-					alt="logo da covidnobrasil.live"
-				/>
+				<Flex justify="center">
+					<PageHeader />
+				</Flex>
 				<Heading as="h1" fontSize="2xl" fontWeight="bold" textAlign="center">
 					{name}
 				</Heading>

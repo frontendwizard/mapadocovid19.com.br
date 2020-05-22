@@ -1,8 +1,9 @@
-import { Stack, Flex, Text, Image, Box } from "@chakra-ui/core"
+import { Stack, Flex, Text, Box } from "@chakra-ui/core"
 import fetch from "isomorphic-fetch"
 
 import * as Country from "../components/Country"
 import Footer from "../components/Footer"
+import PageHeader from "../components/PageHeader"
 import LastUpdateInfo from "../components/LastUpdateInfo"
 import counties from "../utils/counties.json"
 import fetchAllReports from "../utils/fetchAllReports"
@@ -25,12 +26,9 @@ const Home = ({
 				margin={[0, "auto"]}
 				spacing={4}
 			>
-				<Image
-					objectFit="contain"
-					h={[24, 32]}
-					src="covidnobrasil-wide.svg"
-					alt="logo da covidnobrasil.live"
-				/>
+				<Flex justify="center">
+					<PageHeader />
+				</Flex>
 				<Flex justify="center" align="center" wrap="wrap">
 					<Box flexBasis={["100%", "50%"]} mb={[4, 0]} mr={[0, 4]}>
 						<Country.Map results={lastReports} />
