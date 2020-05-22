@@ -43,8 +43,8 @@ const DataThroughTime: React.FC<Props> = ({
 	data,
 	color,
 	title,
-	tickFormat = (value) => value,
-	labelFormat = (value) => value,
+	tickFormat = (value) => `${value.toLocaleString("pt-BR")}`,
+	labelFormat = (value) => `${value.toLocaleString("pt-BR")}`,
 	highlightedIndex,
 	setHighlightedIndex,
 }) => {

@@ -40,6 +40,8 @@ const TotalResults = ({ data }) => {
 						date,
 						value: roundRate(deaths / confirmed),
 					}))}
+					tickFormat={(value: number) => `${value.toLocaleString("pt-BR")}%`}
+					labelFormat={(value: number) => `${value.toLocaleString("pt-BR")}%`}
 					color="orange"
 				/>
 			</Box>

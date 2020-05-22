@@ -31,7 +31,6 @@ const TotalResults = ({ data }) => {
 						value: last_available_deaths,
 					}))}
 					color="gray"
-					tickFormat={(value: number) => `${value / 1000}k`}
 				/>
 			</Box>
 			<Box flex={1}>
@@ -48,6 +47,8 @@ const TotalResults = ({ data }) => {
 						})
 					)}
 					color="orange"
+					tickFormat={(value: number) => `${value.toLocaleString("pt-BR")}%`}
+					labelFormat={(value: number) => `${value.toLocaleString("pt-BR")}%`}
 				/>
 			</Box>
 		</Stack>
