@@ -50,7 +50,7 @@ const DataTable = ({ cities }) => {
 				Header: "população",
 				id: "estimated_population_2019",
 				accessor: ({ estimated_population_2019: population }) =>
-					population.toLocaleString(),
+					population.toLocaleString("pt-BR"),
 				sortType: customSort,
 				sortDescFirst: true,
 			},
