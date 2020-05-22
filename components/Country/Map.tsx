@@ -124,7 +124,7 @@ const Map = ({ results }) => {
 								</Flex>
 								<LegendLabel>
 									<Text m={0} fontSize="xs">
-										{label.text} casos confirmados
+										{Math.round(parseFloat(label.text))} casos confirmados
 									</Text>
 								</LegendLabel>
 							</LegendItem>
