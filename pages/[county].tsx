@@ -9,13 +9,13 @@ import Footer from "../components/Footer"
 import PageHeader from "../components/PageHeader"
 import NewCases from "../components/NewCases"
 
-import fetchAllReports from "../utils/fetchAllReports"
+import fetchAllReports, { Report } from "../utils/fetchAllReports"
 import citiesData from "../utils/cities.json"
 import counties from "../utils/counties.json"
 
 interface CountyPageProps {
 	citiesReports: any
-	history: StateReport[]
+	history: Report[]
 	lastUpdate: Date
 	topology: any
 }
