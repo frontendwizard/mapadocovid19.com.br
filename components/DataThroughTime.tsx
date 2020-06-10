@@ -59,10 +59,12 @@ const DataThroughTime: React.FC<Props> = ({
 						const xScale = scaleTime({
 							range: [0, xMax],
 							domain: extent(data, (x) => new Date(x.date)),
+							nice: true,
 						})
 						const yScale = scaleLinear({
 							range: [yMax, 0],
 							domain: [0, max(data, (x) => x.value)],
+							nice: true,
 						})
 						const handleHover = (event) => {
 							const { x } = localPoint(event)
@@ -139,13 +141,14 @@ const DataThroughTime: React.FC<Props> = ({
 										<AxisRight
 											top={margin.top}
 											scale={yScale}
-											left={xMax + 10}
+											left={xMax}
 											numTicks={5}
 											stroke={color}
 											strokeWidth={2}
 											tickStroke={color}
 											tickLength={4}
 											tickFormat={tickFormat}
+											hideZero
 										/>
 									</Group>
 									<Bar

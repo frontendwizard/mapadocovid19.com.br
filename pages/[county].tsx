@@ -1,17 +1,31 @@
 import { Stack, Flex, Image, Heading, Text, Box } from "@chakra-ui/core"
 import { useRouter } from "next/router"
 import fetch from "isomorphic-fetch"
+import compareAsc from "date-fns/compareAsc"
 
 import * as County from "../components/County"
 import LastUpdateInfo from "../components/LastUpdateInfo"
 import Footer from "../components/Footer"
 import PageHeader from "../components/PageHeader"
+import NewCases from "../components/NewCases"
 
-import fetchAllReports from "../utils/fetchAllReports"
+import fetchAllReports, { Report } from "../utils/fetchAllReports"
 import citiesData from "../utils/cities.json"
 import counties from "../utils/counties.json"
 
-const CountyPage = ({ citiesReports, history, lastUpdate }) => {
+interface CountyPageProps {
+	citiesReports: any
+	history: Report[]
+	lastUpdate: Date
+	topology: any
+}
+
+const CountyPage = ({
+	citiesReports,
+	history,
+	lastUpdate,
+	topology,
+}: CountyPageProps) => {
 	const router = useRouter()
 	const { county } = router.query
 	const { name } = counties.find(({ initials }) => initials === county)
@@ -34,13 +48,19 @@ const CountyPage = ({ citiesReports, history, lastUpdate }) => {
 				</Heading>
 				<Flex justify="center" align="center" wrap="wrap">
 					<Box flexBasis={["100%", "50%"]} mb={[4, 0]} mr={[0, 4]}>
-						<County.Map cities={citiesReports} />
+						<County.Map cities={citiesReports} topology={topology} />
 					</Box>
 					<Box flexBasis={["100%", "40%"]}>
 						<County.TotalResults data={history} />
 					</Box>
 				</Flex>
 				<LastUpdateInfo lastUpdate={lastUpdate} />
+				<NewCases
+					data={history.map((d) => ({
+						date: d.date,
+						newCases: d.new_confirmed,
+					}))}
+				/>
 				<Stack spacing={2}>
 					<Text fontSize="lg" color="gray.500" mt={6}>
 						Dados por cidade:
@@ -59,7 +79,7 @@ export async function getStaticProps({ params: { county } }) {
 	// // get last update for all cities in the country for the circles
 	console.log(`fetching last reports for cities...`)
 	const rawCitiesLastUpdate = await fetchAllReports(
-		`is_last=true&place_type=city`
+		`is_last=true&place_type=city&state=${county}`
 	)
 	console.log(`fetched ${rawCitiesLastUpdate.length} items`)
 	console.log(`adding coords to cities last update...`)
@@ -74,7 +94,13 @@ export async function getStaticProps({ params: { county } }) {
 		})
 	// get county history
 	console.log(`fetching all reports for ${county}...`)
-	const history = await fetchAllReports(`place_type=state&state=${county}`)
+	const history = await fetchAllReports(
+		`place_type=state&state=${county}`
+	).then((d) =>
+		d.sort((first, second) =>
+			compareAsc(new Date(first.date), new Date(second.date))
+		)
+	)
 	console.log(`fetched ${history.length} items`)
 	// get last update info
 	console.log(`fetching timestamp...`)
@@ -82,8 +108,18 @@ export async function getStaticProps({ params: { county } }) {
 		`https://brasil.io/api/dataset/covid19`
 	).then((r) => r.json())
 	console.log(`timestamp: ${tables[1].import_date}`)
+	const countiesCode = await fetch(
+		`https://servicodados.ibge.gov.br/api/v1/localidades/estados`
+	).then((r) => r.json())
+	const countyData = countiesCode.find((c) => c.sigla === county)
+	console.log(`https://servicodados.ibge.gov.br/api/v2/malhas/${countyData.id}`)
+	const topology = await fetch(
+		`https://servicodados.ibge.gov.br/api/v2/malhas/${countyData.id}?resolucao=2&qualidade=3&formato=application/json`
+	).then((r) => r.json())
 	return {
 		props: {
+			countyData,
+			topology,
 			citiesReports,
 			history,
 			lastUpdate: tables[1].import_date,

@@ -18,6 +18,7 @@ const PageHeader = () => {
 				<SvgBox
 					as="svg"
 					height={[24, 32]}
+					maxW="100%"
 					viewBox="0 0 908 214"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"

@@ -9,8 +9,6 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import Link from "next/link"
 
-import topology from "../../utils/topologyLowPoly.json"
-
 const selectedStyles = (props) =>
 	props.variant === "selected" &&
 	css`
@@ -26,14 +24,19 @@ const State = styled.path`
 	${selectedStyles}
 `
 
-const Map = ({ results }) => {
+interface GeometryProps {
+	codarea: string
+	centroide: [number, number]
+}
+
+const Map = ({ results, topology, countiesCode }) => {
 	const brazil = topojson.feature(
-		topology as Topology<{ states: GeometryCollection<{ nome: string }> }>,
-		topology.objects.states as GeometryCollection<{ nome: string }>
+		topology as Topology<{ foo: GeometryCollection<GeometryProps> }>,
+		topology.objects.foo as GeometryCollection<GeometryProps>
 	)
 	const outline = topojson.mesh(
-		topology as Topology<{ states: GeometryCollection<{ nome: string }> }>,
-		topology.objects.states as GeometryCollection<{ nome: string }>
+		topology as Topology<{ foo: GeometryCollection<GeometryProps> }>,
+		topology.objects.foo as GeometryCollection<GeometryProps>
 	)
 	const colorScale = scaleLinear({
 		domain: [0, Math.max(...results.map((r) => r.last_available_confirmed))],
@@ -56,29 +59,25 @@ const Map = ({ results }) => {
 							]}
 						>
 							{(mercator) => {
-								mercator.features.sort((a, b) => {
-									const countyA = results.find((r) => r.state === a.feature.id)
-									const countyB = results.find((r) => r.state === b.feature.id)
-									return (
-										countyB.last_available_confirmed -
-										countyA.last_available_confirmed
-									)
-								})
 								return (
 									<g>
 										{mercator.features.map(({ feature: f }) => {
-											const county = results.find((r) => r.state === f.id)
+											const countyCode = f.properties.codarea
+											const { sigla } = countiesCode.find(
+												(c) => c.id === +countyCode
+											)
+											const county = results.find((r) => r.state === sigla)
 											return (
 												<Tooltip
-													key={f.id}
+													key={sigla}
 													label={`${county.state} (${county.last_available_confirmed} confirmados, ${county.last_available_deaths} mortes)`}
 													aria-label={`${county.state} (${county.last_available_confirmed} confirmados, ${county.last_available_deaths} mortes)`}
 													placement="top"
 													hasArrow
 												>
 													<Box as="g">
-														<Link href="/[county]" as={`/${f.id}`}>
-															<ChakraLink href={`/${f.id}`}>
+														<Link href="/[county]" as={`/${sigla}`}>
+															<ChakraLink href={`/${sigla}`}>
 																<State
 																	fill={colorScale(
 																		county.last_available_confirmed
