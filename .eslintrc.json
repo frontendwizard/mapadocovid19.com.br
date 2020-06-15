@@ -1,9 +1,12 @@
 {
+  "parser": "@typescript-eslint/parser",
 	"extends": [
 		"standard",
 		"plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
 		"prettier",
-		"prettier/react"
+		"prettier/react",
+		"prettier/"
 	],
 	"plugins": ["react"],
 	"ecmaFeatures": {
@@ -12,6 +15,7 @@
 	},
 	"rules": {
 		"react/react-in-jsx-scope": "off",
-		"react/prop-types": "off"
+		"react/prop-types": "off",
+    "camelcase": "off"
 	}
 }

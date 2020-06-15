@@ -1,1 +1,1 @@
-export default (number: number) => (number > 0 ? "+" : "")
+export default (number: number) => (number > 0 ? '+' : '')

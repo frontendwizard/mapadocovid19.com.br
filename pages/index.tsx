@@ -1,5 +1,5 @@
-import { Stack, Flex, Text, Box, Heading } from "@chakra-ui/core"
-import fetch from "isomorphic-fetch"
+import { Stack, Flex, Text, Box } from "@chakra-ui/core"
+import compareAsc from "date-fns/compareAsc"
 
 import * as Country from "../components/Country"
 import Footer from "../components/Footer"
@@ -8,7 +8,6 @@ import LastUpdateInfo from "../components/LastUpdateInfo"
 import NewCases from "../components/NewCases"
 import counties from "../utils/counties.json"
 import fetchAllReports, { Report } from "../utils/fetchAllReports"
-import compareAsc from "date-fns/compareAsc"
 
 interface CountrySumReport {
 	date: string
@@ -35,7 +34,7 @@ interface HomeProps {
 	countiesCode: any
 }
 
-const Home = ({
+const Home : React.SFC<HomeProps>= ({
 	lastReports,
 	previousReports,
 	lastUpdate,
@@ -44,7 +43,7 @@ const Home = ({
 	countryNewCasesByDay,
 	topology,
 	countiesCode,
-}: HomeProps) => (
+}) => (
 	<>
 		<Country.Headers />
 		<Stack
@@ -59,14 +58,14 @@ const Home = ({
 				<PageHeader />
 			</Flex>
 			<Flex justify="center" align="center" wrap="wrap">
-				<Box flexBasis={["100%", "50%"]} mb={[4, 0]} mr={[0, 4]}>
+				<Box w="100%" mb={4}>
 					<Country.Map
 						results={lastReports}
 						topology={topology}
 						countiesCode={countiesCode}
 					/>
 				</Box>
-				<Box flexBasis={["100%", "40%"]}>
+				<Box w="100%">
 					<Country.TotalResults data={countrySumByDay} />
 				</Box>
 			</Flex>
@@ -116,12 +115,10 @@ export async function getStaticProps() {
 		return acc
 	}, [])
 	const countryNewCasesByDay: CountryNewCaseByDay[] = countrySumByDay
-		.map((day, i) => {
-			return {
-				date: day.date,
-				newCases: day.newConfirmed,
-			}
-		})
+		.map((day) => ({
+			date: day.date,
+			newCases: day.newConfirmed,
+		}))
 		.sort((first, second) =>
 			compareAsc(new Date(first.date), new Date(second.date))
 		)
