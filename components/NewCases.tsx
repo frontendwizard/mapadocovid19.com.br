@@ -16,7 +16,7 @@ import { Group } from '@vx/group'
 import { AxisLeft } from '@vx/axis'
 import { ParentSize } from '@vx/responsive'
 import { GridRows } from '@vx/grid'
-import { motion, AnimatePresence, useMotionValue } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import format from 'date-fns/format'
 import locale from 'date-fns/locale/pt-BR'
 

@@ -1,6 +1,5 @@
-import { Stack, Flex, Image, Heading, Text, Box } from '@chakra-ui/core'
+import { Stack, Flex, Heading, Text, Box } from '@chakra-ui/core'
 import { useRouter } from 'next/router'
-import fetch from 'isomorphic-fetch'
 import compareAsc from 'date-fns/compareAsc'
 
 import * as County from '../components/County'
@@ -13,19 +12,19 @@ import fetchAllReports, { Report } from '../utils/fetchAllReports'
 import citiesData from '../utils/cities.json'
 import counties from '../utils/counties.json'
 
-interface CountyPageProps {
+interface Props {
   citiesReports: any
   history: Report[]
   lastUpdate: Date
   topology: any
 }
 
-const CountyPage = ({
+const CountyPage: React.FC<Props> = ({
   citiesReports,
   history,
   lastUpdate,
   topology,
-}: CountyPageProps) => {
+}) => {
   const router = useRouter()
   const { county } = router.query
   const { name } = counties.find(({ initials }) => initials === county)
