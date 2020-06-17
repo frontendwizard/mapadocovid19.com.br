@@ -1,17 +1,19 @@
 {
-	"extends": [
-		"standard",
-		"plugin:react/recommended",
-		"prettier",
-		"prettier/react"
-	],
-	"plugins": ["react"],
-	"ecmaFeatures": {
-		"jsx": true,
-		"modules": true
-	},
-	"rules": {
-		"react/react-in-jsx-scope": "off",
-		"react/prop-types": "off"
-	}
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true
+  },
+  "extends": [
+    "standard",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": ["react"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "camelcase": "off"
+  }
 }
