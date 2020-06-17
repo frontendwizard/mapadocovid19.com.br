@@ -7,7 +7,7 @@ const intl = new Intl.NumberFormat('pt-BR')
 
 const TotalResults = ({ data }) => {
   const roundRate = (rate: number) => Math.round(rate * 1000) / 10
-  const [highlightedIndex, setHighlightedIndex] = useState(0)
+  const [highlightedIndex, setHighlightedIndex] = useState(data.length - 1)
   return (
     <Stack spacing={4} display="flex" w="100%">
       <Box flex={1}>
