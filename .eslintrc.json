@@ -3,17 +3,17 @@
   "env": {
     "browser": true
   },
-	"extends": [
-		"standard",
-		"plugin:react/recommended",
+  "extends": [
+    "standard",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-		"prettier",
-		"prettier/react"
-	],
-	"plugins": ["react"],
-	"rules": {
-		"react/react-in-jsx-scope": "off",
-		"react/prop-types": "off",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": ["react"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
     "camelcase": "off"
-	}
+  }
 }

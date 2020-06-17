@@ -12,7 +12,7 @@ const LastUpdateInfo = ({ lastUpdate }) => (
       fontWeight="bold"
       rounded="md"
     >
-			Atualizado{' '}
+      Atualizado{' '}
       {formatDistance(new Date(lastUpdate), new Date(), {
         addSuffix: true,
         locale: pt,

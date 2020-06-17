@@ -48,7 +48,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
         id: initials,
         confirmed: reports[0].last_available_confirmed,
         confirmedPer100K:
-					reports[0].last_available_confirmed_per_100k_inhabitants,
+          reports[0].last_available_confirmed_per_100k_inhabitants,
         region,
         data: reports
           .map(
@@ -109,7 +109,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
   return (
     <Stack spacing={2}>
       <Heading as="h2" fontSize="2xl">
-				Casos a cada 100k habitantes
+        Casos a cada 100k habitantes
       </Heading>
       <RadioButtonGroup
         defaultValue="topConfirmedPerHundred"
@@ -149,7 +149,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
             xScale={{ type: 'linear' }}
             yScale={{ type: 'linear' }}
             yFormat={(value: number) =>
-							`${Math.round(value * 100) / 100} casos`
+              `${Math.round(value * 100) / 100} casos`
             }
             curve="monotoneX"
             colors={{ scheme: 'category10' }}
@@ -203,7 +203,7 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
             xFormat="time:%Y-%m-%d"
             yScale={{ type: 'linear' }}
             yFormat={(value: number) =>
-							`${Math.round(value * 100) / 100} casos`
+              `${Math.round(value * 100) / 100} casos`
             }
             curve="monotoneX"
             colors={{ scheme: 'category10' }}

@@ -23,7 +23,7 @@ const fetchAllReportsByType: (
   dataset?: string
 ) => Promise<Report[]> = async (params, dataset = 'caso_full') => {
   const { count, next, results: firstPage } = await fetch(
-		`https://brasil.io/api/dataset/covid19/${dataset}/data?${params}`
+    `https://brasil.io/api/dataset/covid19/${dataset}/data?${params}`
   ).then((r) => r.json())
 
   if (!next) return firstPage
@@ -33,9 +33,9 @@ const fetchAllReportsByType: (
   const remainingPages = await Promise.all(
     Array.from(Array(pages - 1).keys()).map((page) =>
       fetch(
-				`https://brasil.io/api/dataset/covid19/${dataset}/data?page=${
-					page + 2
-				}&${params}`
+        `https://brasil.io/api/dataset/covid19/${dataset}/data?page=${
+          page + 2
+        }&${params}`
       ).then((r) => r.json())
     )
   )

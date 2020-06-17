@@ -25,7 +25,7 @@ const FetchData = ({ children }) => {
       acc[index].deaths += item.last_available_deaths
       acc[index].confirmed += item.last_available_confirmed
       acc[index].confirmedPer100k +=
-				item.last_available_confirmed_per_100k_inhabitants
+        item.last_available_confirmed_per_100k_inhabitants
     } else {
       acc.push({
         date: item.date,

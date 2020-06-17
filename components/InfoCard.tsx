@@ -34,7 +34,7 @@ const InfoCard = ({
         {suffix}
       </Text>
       <Text as="span" fontSize="sm" ml={1} color={`${color}.700`}>
-				[{leadingSign(comparison)}
+        [{leadingSign(comparison)}
         {comparison}
         {suffix}]
       </Text>

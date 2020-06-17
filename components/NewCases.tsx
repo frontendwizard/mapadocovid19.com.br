@@ -165,7 +165,7 @@ const NewCases = ({ data }: NewCasesProps) => {
   return (
     <Box>
       <Heading as="h2" fontSize="2xl">
-				Casos novos por dia
+        Casos novos por dia
       </Heading>
       <Stack alignItems="center" spacing={4} isInline>
         <Box h={48} flex="1 auto">

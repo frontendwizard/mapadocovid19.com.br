@@ -23,7 +23,7 @@ const CountiesTable = ({ previousReports, lastReports }) => {
             <>
               <Text as="span">{confirmed}</Text>
               <Text as="span" fontSize="xs" ml={2}>
-								[{leadingSign(confirmed - previousConfirmed)}
+                [{leadingSign(confirmed - previousConfirmed)}
                 {confirmed - previousConfirmed}]
               </Text>
             </>
@@ -44,7 +44,7 @@ const CountiesTable = ({ previousReports, lastReports }) => {
             <>
               <Text as="span">{deaths}</Text>
               <Text as="span" fontSize="xs" ml={2}>
-								[{leadingSign(deaths - previousDeaths)}
+                [{leadingSign(deaths - previousDeaths)}
                 {deaths - previousDeaths}]
               </Text>
             </>
@@ -57,7 +57,7 @@ const CountiesTable = ({ previousReports, lastReports }) => {
         Header: 'mortalidade',
         // eslint-disable-next-line camelcase
         accessor: ({ last_available_death_rate: death_rate }) =>
-        // eslint-disable-next-line camelcase
+          // eslint-disable-next-line camelcase
           death_rate ? `${Math.round(death_rate * 1000) / 10}%` : '0%',
         id: 'last_available_death_rate',
         sortDescFirst: true,

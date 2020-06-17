@@ -12,17 +12,17 @@ import { useMemo } from 'react'
 
 const selectedStyles = (props) =>
   props.variant === 'selected' &&
-	css`
-		fill: white;
-		stroke: red;
-		stroke-width: 2;
-	`
+  css`
+    fill: white;
+    stroke: red;
+    stroke-width: 2;
+  `
 
 const State = styled.path`
-	stroke: black;
-	stroke-width: 0.5;
-	cursor: pointer;
-	${selectedStyles}
+  stroke: black;
+  stroke-width: 0.5;
+  cursor: pointer;
+  ${selectedStyles}
 `
 
 interface GeometryProps {
@@ -61,7 +61,7 @@ const Map = ({ results, topology, countiesCode }) => {
   const offset = 0
 
   return (
-    <Box height={[350, 475, 600]} mt={8} position="relative">
+    <Box height={[350, 350, 475, 600]} mt={8} position="relative">
       <ParentSize>
         {({ width: w, height: h }) => (
           <svg width={w} height={h}>

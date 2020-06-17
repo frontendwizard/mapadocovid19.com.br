@@ -80,11 +80,11 @@ const Table = ({ columns, data }) => {
           {rows.map((row) => {
             prepareRow(row)
             return (
-            // eslint-disable-next-line react/jsx-key
+              // eslint-disable-next-line react/jsx-key
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                  // eslint-disable-next-line react/jsx-key
+                    // eslint-disable-next-line react/jsx-key
                     <td {...cell.getCellProps()}>
                       <Box
                         px={5}
