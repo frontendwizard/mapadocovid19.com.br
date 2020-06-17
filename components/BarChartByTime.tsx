@@ -22,22 +22,18 @@ import locale from 'date-fns/locale/pt-BR'
 
 interface Report {
   date: string
-  newCases: number
+  value: number
 }
 
 // accessors
 const x = (d: Report) => new Date(d.date)
-const y = (d: Report) => d.newCases
+const y = (d: Report) => d.value
 
 const margin = {
   top: 20,
   right: 0,
   left: 30,
   bottom: 20,
-}
-
-interface NewCasesProps {
-  data: Report[]
 }
 
 enum DateRange {
@@ -53,6 +49,7 @@ const Chart = ({
   dateRange,
   setHighlighted,
   highlighted,
+  color,
 }) => {
   const theme = useTheme()
   const getData: () => Report[] = () => {
@@ -94,7 +91,9 @@ const Chart = ({
       <Group left={margin.left} top={margin.top}>
         <AxisLeft
           scale={yScale}
-          tickFormat={(value: number) => `${value / 1000}k`}
+          tickFormat={(value: number) =>
+            value > 1000 ? `${value / 1000}k` : value
+          }
           hideAxisLine
           hideZero
         />
@@ -131,8 +130,8 @@ const Chart = ({
                   key={`bar-${d.date}-foreground`}
                   fill={
                     d.date === highlighted.date
-                      ? theme.colors.red[500]
-                      : theme.colors.red[300]
+                      ? theme.colors[color][500]
+                      : theme.colors[color][300]
                   }
                   initial={{
                     y: yMax,
@@ -159,13 +158,19 @@ const Chart = ({
   )
 }
 
-const NewCases = ({ data }: NewCasesProps) => {
+interface BarChartByTimeProps {
+  data: Report[]
+  title: string
+  color: string
+}
+
+const BarChartByTime = ({ data, title, color }: BarChartByTimeProps) => {
   const [dateRange, setDateRange] = useState('last week')
   const [highlighted, setHighlighted] = useState(data[data.length - 1])
   return (
     <Box>
       <Heading as="h2" fontSize="2xl">
-        Casos novos por dia
+        {title}
       </Heading>
       <Stack alignItems="center" spacing={4} isInline>
         <Box h={48} flex="1 auto">
@@ -178,14 +183,15 @@ const NewCases = ({ data }: NewCasesProps) => {
                 dateRange={dateRange}
                 highlighted={highlighted}
                 setHighlighted={setHighlighted}
+                color={color}
               />
             )}
           </ParentSize>
         </Box>
         <Stat flex="0 0 auto">
           <StatNumber>
-            <Icon name="triangle-up" color="red.500" />
-            {highlighted.newCases}
+            <Icon name="triangle-up" color={`${color}.500`} />
+            {highlighted.value}
           </StatNumber>
           <StatHelpText textTransform="capitalize">
             {format(new Date(highlighted.date), 'EEEE dd/MM', { locale })}
@@ -205,4 +211,4 @@ const NewCases = ({ data }: NewCasesProps) => {
   )
 }
 
-export default NewCases
+export default BarChartByTime

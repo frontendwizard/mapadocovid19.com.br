@@ -5,7 +5,7 @@ import * as Country from '../components/Country'
 import Footer from '../components/Footer'
 import PageHeader from '../components/PageHeader'
 import LastUpdateInfo from '../components/LastUpdateInfo'
-import NewCases from '../components/NewCases'
+import BarChartByTime from '../components/BarChartByTime'
 import counties from '../utils/counties.json'
 import fetchAllReports, { Report } from '../utils/fetchAllReports'
 
@@ -29,7 +29,6 @@ interface HomeProps {
   lastUpdate: string
   reportsByCounty: Report[]
   countrySumByDay: CountrySumReport[]
-  countryNewCasesByDay: CountryNewCaseByDay[]
   topology: any
   countiesCode: any
 }
@@ -40,7 +39,6 @@ const Home: React.SFC<HomeProps> = ({
   lastUpdate,
   reportsByCounty,
   countrySumByDay,
-  countryNewCasesByDay,
   topology,
   countiesCode,
 }) => (
@@ -71,7 +69,24 @@ const Home: React.SFC<HomeProps> = ({
       </Flex>
       <LastUpdateInfo lastUpdate={lastUpdate} />
       <Box>
-        <NewCases data={countryNewCasesByDay} />
+        <BarChartByTime
+          data={countrySumByDay.map(({ date, newConfirmed }) => ({
+            date,
+            value: newConfirmed,
+          }))}
+          color="red"
+          title="Casos novos por dia"
+        />
+      </Box>
+      <Box>
+        <BarChartByTime
+          data={countrySumByDay.map(({ date, newDeaths }) => ({
+            date,
+            value: newDeaths,
+          }))}
+          color="gray"
+          title="Óbitos por dia"
+        />
       </Box>
       <Box>
         <Country.NormalizedConfirmed reportsByCounty={reportsByCounty} />
@@ -93,32 +108,28 @@ const Home: React.SFC<HomeProps> = ({
 export async function getStaticProps() {
   const reports = await fetchAllReports(`place_type=state`)
   const lastReports = reports.filter(({ is_last: isLast }) => isLast)
-  const countrySumByDay = reports.reduce<CountrySumReport[]>((acc, item) => {
-    const index = acc.indexOf(acc.find((i) => i.date === item.date))
-    if (index >= 0) {
-      acc[index].deaths += item.last_available_deaths
-      acc[index].confirmed += item.last_available_confirmed
-      acc[index].confirmedPer100k +=
-        item.last_available_confirmed_per_100k_inhabitants
-      acc[index].newConfirmed += item.new_confirmed
-      acc[index].newDeaths += item.new_deaths
-    } else {
-      acc.push({
-        date: item.date,
-        deaths: item.last_available_deaths,
-        confirmed: item.last_available_confirmed,
-        confirmedPer100k: item.last_available_confirmed_per_100k_inhabitants,
-        newConfirmed: item.new_confirmed,
-        newDeaths: item.new_deaths,
-      })
-    }
-    return acc
-  }, [])
-  const countryNewCasesByDay: CountryNewCaseByDay[] = countrySumByDay
-    .map((day) => ({
-      date: day.date,
-      newCases: day.newConfirmed,
-    }))
+  const countrySumByDay: CountrySumReport[] = reports
+    .reduce<CountrySumReport[]>((acc, item) => {
+      const index = acc.indexOf(acc.find((i) => i.date === item.date))
+      if (index >= 0) {
+        acc[index].deaths += item.last_available_deaths
+        acc[index].confirmed += item.last_available_confirmed
+        acc[index].confirmedPer100k +=
+          item.last_available_confirmed_per_100k_inhabitants
+        acc[index].newConfirmed += item.new_confirmed
+        acc[index].newDeaths += item.new_deaths
+      } else {
+        acc.push({
+          date: item.date,
+          deaths: item.last_available_deaths,
+          confirmed: item.last_available_confirmed,
+          confirmedPer100k: item.last_available_confirmed_per_100k_inhabitants,
+          newConfirmed: item.new_confirmed,
+          newDeaths: item.new_deaths,
+        })
+      }
+      return acc
+    }, [])
     .sort((first, second) =>
       compareAsc(new Date(first.date), new Date(second.date))
     )
@@ -150,7 +161,6 @@ export async function getStaticProps() {
       topology,
       countiesCode,
       countrySumByDay,
-      countryNewCasesByDay,
       reportsByCounty,
       lastReports,
       previousReports,

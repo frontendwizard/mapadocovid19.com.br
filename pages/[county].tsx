@@ -6,7 +6,7 @@ import * as County from '../components/County'
 import LastUpdateInfo from '../components/LastUpdateInfo'
 import Footer from '../components/Footer'
 import PageHeader from '../components/PageHeader'
-import NewCases from '../components/NewCases'
+import BarChartByTime from '../components/BarChartByTime'
 
 import fetchAllReports, { Report } from '../utils/fetchAllReports'
 import citiesData from '../utils/cities.json'
@@ -54,12 +54,26 @@ const CountyPage: React.FC<Props> = ({
           </Box>
         </Flex>
         <LastUpdateInfo lastUpdate={lastUpdate} />
-        <NewCases
-          data={history.map((d) => ({
-            date: d.date,
-            newCases: d.new_confirmed,
-          }))}
-        />
+        <Box>
+          <BarChartByTime
+            data={history.map((d) => ({
+              date: d.date,
+              value: d.new_confirmed,
+            }))}
+            color="red"
+            title="Casos novos por dia"
+          />
+        </Box>
+        <Box>
+          <BarChartByTime
+            data={history.map((d) => ({
+              date: d.date,
+              value: d.new_deaths,
+            }))}
+            color="gray"
+            title="Óbitos por dia"
+          />
+        </Box>
         <Stack spacing={2}>
           <Text fontSize="lg" color="gray.500" mt={6}>
             Dados por cidade:
