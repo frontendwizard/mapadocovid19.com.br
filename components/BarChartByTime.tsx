@@ -92,7 +92,7 @@ const Chart = ({
         <AxisLeft
           scale={yScale}
           tickFormat={(value: number) =>
-            value > 1000 ? `${value / 1000}k` : value
+            value >= 1000 ? `${value / 1000}k` : value
           }
           hideAxisLine
           hideZero
