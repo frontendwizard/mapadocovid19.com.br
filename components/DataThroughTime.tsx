@@ -161,7 +161,7 @@ const Chart: React.FC<ChartProps> = ({
           onTouchStart={handleHover}
           onTouchMove={handleHover}
           onMouseMove={handleHover}
-          onMouseLeave={() => setHighlightedIndex(0)}
+          onMouseLeave={() => setHighlightedIndex(data.length - 1)}
         />
       </svg>
     </Box>
