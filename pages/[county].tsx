@@ -16,14 +16,12 @@ interface Props {
   citiesReports: any
   history: Report[]
   lastUpdate: Date
-  topology: any
 }
 
 const CountyPage: React.FC<Props> = ({
   citiesReports,
   history,
   lastUpdate,
-  topology,
 }) => {
   const router = useRouter()
   const { county } = router.query
@@ -47,7 +45,7 @@ const CountyPage: React.FC<Props> = ({
         </Heading>
         <Flex justify="center" align="center" wrap="wrap">
           <Box w={['100%', '100%', '45%']} mb={[4, 4, 0]} mr={[0, 0, 4]}>
-            <County.Map cities={citiesReports} topology={topology} />
+            <County.Map cities={citiesReports} />
           </Box>
           <Box w={['100%', '100%', '50%']}>
             <County.TotalResults data={history} />
@@ -121,18 +119,8 @@ export async function getStaticProps({ params: { county } }) {
     'https://brasil.io/api/dataset/covid19'
   ).then((r) => r.json())
   console.log(`timestamp: ${tables[1].import_date}`)
-  const countiesCode = await fetch(
-    'https://servicodados.ibge.gov.br/api/v1/localidades/estados'
-  ).then((r) => r.json())
-  const countyData = countiesCode.find((c) => c.sigla === county)
-  console.log(`https://servicodados.ibge.gov.br/api/v2/malhas/${countyData.id}`)
-  const topology = await fetch(
-    `https://servicodados.ibge.gov.br/api/v2/malhas/${countyData.id}?resolucao=2&qualidade=3&formato=application/json`
-  ).then((r) => r.json())
   return {
     props: {
-      countyData,
-      topology,
       citiesReports,
       history,
       lastUpdate: tables[1].import_date,

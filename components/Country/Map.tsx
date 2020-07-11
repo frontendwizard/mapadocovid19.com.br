@@ -10,6 +10,8 @@ import { css } from '@emotion/core'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
+import countiesCode from '../../public/countiesCode.json'
+
 const selectedStyles = (props) =>
   props.variant === 'selected' &&
   css`
@@ -30,7 +32,7 @@ interface GeometryProps {
   centroide: [number, number]
 }
 
-const Map = ({ results, topology, countiesCode }) => {
+const Map = ({ results, topology }) => {
   const brazil = useMemo(
     () =>
       topojson.feature(
