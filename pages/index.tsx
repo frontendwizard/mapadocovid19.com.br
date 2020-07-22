@@ -9,6 +9,8 @@ import BarChartByTime from '../components/BarChartByTime'
 import counties from '../utils/counties.json'
 import fetchAllReports, { Report } from '../utils/fetchAllReports'
 
+import topology from '../public/topologies/brazil.json'
+
 interface CountrySumReport {
   date: string
   deaths: number
@@ -18,19 +20,12 @@ interface CountrySumReport {
   newDeaths: number
 }
 
-interface CountryNewCaseByDay {
-  date: string
-  newCases: number
-}
-
 interface HomeProps {
   lastReports: Report[]
   previousReports: Report[]
   lastUpdate: string
   reportsByCounty: Report[]
   countrySumByDay: CountrySumReport[]
-  topology: any
-  countiesCode: any
 }
 
 const Home: React.SFC<HomeProps> = ({
@@ -39,8 +34,6 @@ const Home: React.SFC<HomeProps> = ({
   lastUpdate,
   reportsByCounty,
   countrySumByDay,
-  topology,
-  countiesCode,
 }) => (
   <>
     <Country.Headers />
@@ -57,11 +50,7 @@ const Home: React.SFC<HomeProps> = ({
       </Flex>
       <Flex justify="center" align="center" wrap="wrap">
         <Box w={['100%', '100%', '45%']} mb={[4, 4, 0]} mr={[0, 0, 4]}>
-          <Country.Map
-            results={lastReports}
-            topology={topology}
-            countiesCode={countiesCode}
-          />
+          <Country.Map results={lastReports} topology={topology} />
         </Box>
         <Box w={['100%', '100%', '50%']}>
           <Country.TotalResults data={countrySumByDay} />
@@ -148,18 +137,8 @@ export async function getStaticProps() {
     `https://brasil.io/api/dataset/covid19`
   ).then((r) => r.json())
 
-  const topology = await fetch(
-    `https://servicodados.ibge.gov.br/api/v2/malhas?resolucao=2&qualidade=1&formato=application/json`
-  ).then((r) => r.json())
-
-  const countiesCode = await fetch(
-    `https://servicodados.ibge.gov.br/api/v1/localidades/estados`
-  ).then((r) => r.json())
-
   return {
     props: {
-      topology,
-      countiesCode,
       countrySumByDay,
       reportsByCounty,
       lastReports,

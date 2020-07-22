@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import useEscToNavigateBack from '../../hooks/useEscToNavigateBack'
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 const selectedStyles = (props: { variant: 'selected' | null }) =>
   props.variant === 'selected' &&
@@ -99,15 +99,25 @@ interface GeometryProps {
 
 interface Props {
   cities: City[]
-  topology: Topology<{ foo: GeometryCollection<GeometryProps> }>
 }
 
-const Map: React.FC<Props> = ({ cities, topology }) => {
+const Map: React.FC<Props> = ({ cities }) => {
   const router = useRouter()
   const { county } = router.query
+  const [topology, setTopology] = useState<Topology<{
+    foo: GeometryCollection<GeometryProps>
+  }> | null>(null)
+  useEffect(() => {
+    ;(async () => {
+      const topology: Topology<{
+        foo: GeometryCollection<GeometryProps>
+      }> = await import(`../../public/topologies/${county}.json`)
+      setTopology(topology)
+    })()
+  }, [])
   const countyTopology = useMemo(
-    () => topojson.feature(topology, topology.objects.foo),
-    []
+    () => topology && topojson.feature(topology, topology.objects.foo),
+    [topology]
   )
   const radiusScale = useMemo(
     () =>
@@ -120,6 +130,9 @@ const Map: React.FC<Props> = ({ cities, topology }) => {
 
   const offset = 15
   useEscToNavigateBack(router)
+
+  if (!topology) return null
+  console.log('cities', cities)
 
   return (
     <Box height={[350, 475, 600]} mt={8} position="relative">
