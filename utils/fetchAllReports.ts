@@ -3,6 +3,7 @@ export interface Report {
   city_ibge_code: number
   date: string
   epidemiological_week: number
+  estimated_population: number
   estimated_population_2019: number
   is_last: boolean
   is_repeated: boolean
@@ -18,12 +19,20 @@ export interface Report {
   state: string
 }
 
+const authHeader:HeadersInit = new Headers()
+authHeader.append('Authorization', `Token ${process.env.BRASILIO_TOKEN}`)
+
+export const requestOptions = {
+  headers: authHeader
+}
+
 const fetchAllReportsByType: (
   params: string,
   dataset?: string
 ) => Promise<Report[]> = async (params, dataset = 'caso_full') => {
   const { count, next, results: firstPage } = await fetch(
-    `https://brasil.io/api/dataset/covid19/${dataset}/data?${params}`
+    `https://api.brasil.io/v1/dataset/covid19/${dataset}/data?${params}`,
+    requestOptions
   ).then((r) => r.json())
 
   if (!next) return firstPage
@@ -33,9 +42,10 @@ const fetchAllReportsByType: (
   const remainingPages = await Promise.all(
     Array.from(Array(pages - 1).keys()).map((page) =>
       fetch(
-        `https://brasil.io/api/dataset/covid19/${dataset}/data?page=${
+        `https://api.brasil.io/v1/dataset/covid19/${dataset}/data?page=${
           page + 2
-        }&${params}`
+        }&${params}`,
+        requestOptions
       ).then((r) => r.json())
     )
   )
