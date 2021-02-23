@@ -3,6 +3,7 @@ export interface Report {
   city_ibge_code: number
   date: string
   epidemiological_week: number
+  estimated_population: number
   estimated_population_2019: number
   is_last: boolean
   is_repeated: boolean
@@ -18,7 +19,7 @@ export interface Report {
   state: string
 }
 
-const authHeader = new Headers()
+const authHeader:HeadersInit = new Headers()
 authHeader.append('Authorization', `Token ${process.env.BRASILIO_TOKEN}`)
 
 export const requestOptions = {
