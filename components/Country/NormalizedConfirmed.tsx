@@ -7,7 +7,7 @@ import {
   Stack,
   Button,
   Box,
-  RadioButtonGroup,
+  RadioGroup,
   Checkbox,
   ButtonProps,
   RadioProps,
@@ -21,7 +21,7 @@ const RadioButton = forwardRef<ButtonProps, RadioProps>((props, ref) => {
     <Button
       ref={ref}
       rounded="full"
-      variantColor={isChecked ? 'red' : 'gray'}
+      colorScheme={isChecked ? 'red' : 'gray'}
       aria-checked={isChecked}
       role="radio"
       isDisabled={isDisabled}
@@ -111,28 +111,29 @@ const NormalizedConfirmed = ({ reportsByCounty }) => {
       <Heading as="h2" fontSize="2xl">
         Casos a cada 100k habitantes
       </Heading>
-      <RadioButtonGroup
+      <RadioGroup
         defaultValue="topConfirmedPerHundred"
         onChange={(val: string) => setSelectedChart(val)}
         spacing={2}
-        isInline
       >
-        {options.map(({ value, label }) => (
-          <RadioButton key={value} value={value} mb={2}>
-            <Text as="span" fontSize="sm">
-              {label}
-            </Text>
-          </RadioButton>
-        ))}
-      </RadioButtonGroup>
+        <Stack direction="row">
+          {options.map(({ value, label }) => (
+            <RadioButton key={value} value={value} mb={2}>
+              <Text as="span" fontSize="sm">
+                {label}
+              </Text>
+            </RadioButton>
+          ))}
+        </Stack>
+      </RadioGroup>
       <Checkbox
         borderColor="gray.400"
-        variantColor="green"
+        colorScheme="green"
         size="sm"
         isChecked={fromFirstCaseDate}
-        onChange={(e) => {
+        onChange={(value) => {
           setAnimate(false)
-          setFromFirstCaseDate(e.target.checked)
+          setFromFirstCaseDate(value)
         }}
       >
         <Text as="span">mostrar casos a partir da data do primeiro caso</Text>

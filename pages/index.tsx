@@ -28,7 +28,7 @@ interface HomeProps {
   countrySumByDay: CountrySumReport[]
 }
 
-const Home: React.SFC<HomeProps> = ({
+const Home: React.FC<HomeProps> = ({
   lastReports,
   previousReports,
   lastUpdate,

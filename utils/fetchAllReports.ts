@@ -35,6 +35,7 @@ const fetchAllReportsByType: (
     requestOptions
   ).then((r) => r.json())
 
+  // if(!next)return firstPage
   return firstPage
 
   // const reports = [...firstPage]

@@ -1,17 +1,15 @@
 import React from 'react'
 import Router from 'next/router'
-import { theme, ThemeProvider, CSSReset } from '@chakra-ui/react'
-import 'normalize.css'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 
 import * as gtag from '../lib/gtag'
 
 Router.events.on('routeChangeComplete', (url) => gtag.pageview(url))
 
 const App = ({ Component, pageProps }) => (
-  <ThemeProvider theme={theme}>
-    <CSSReset />
+  <ChakraProvider resetCSS theme={theme}>
     <Component {...pageProps} />
-  </ThemeProvider>
+  </ChakraProvider>
 )
 
 export default App

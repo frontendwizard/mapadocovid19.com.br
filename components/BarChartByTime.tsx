@@ -7,9 +7,9 @@ import {
   Stat,
   StatNumber,
   StatHelpText,
-  Icon,
   Stack,
 } from '@chakra-ui/react'
+import { TriangleUpIcon } from '@chakra-ui/icons'
 import { useMemo, useState } from 'react'
 import { scaleBand, scaleLinear } from '@vx/scale'
 import { Group } from '@vx/group'
@@ -190,7 +190,7 @@ const BarChartByTime = ({ data, title, color }: BarChartByTimeProps) => {
         </Box>
         <Stat flex="0 0 auto">
           <StatNumber>
-            <Icon name="triangle-up" color={`${color}.500`} />
+            <TriangleUpIcon color={`${color}.500`} />
             {highlighted.value}
           </StatNumber>
           <StatHelpText textTransform="capitalize">
@@ -198,14 +198,12 @@ const BarChartByTime = ({ data, title, color }: BarChartByTimeProps) => {
           </StatHelpText>
         </Stat>
       </Stack>
-      <RadioGroup
-        isInline
-        onChange={(e) => setDateRange(e.target.value)}
-        value={dateRange}
-      >
-        <Radio value={DateRange.LAST_WEEK}>Últimos 7 dias</Radio>
-        <Radio value={DateRange.LAST_MONTH}>Últimos 30 dias</Radio>
-        <Radio value={DateRange.BEGINNING}>Desde o início</Radio>
+      <RadioGroup onChange={(val) => setDateRange(val)} value={dateRange}>
+        <Stack>
+          <Radio value={DateRange.LAST_WEEK}>Últimos 7 dias</Radio>
+          <Radio value={DateRange.LAST_MONTH}>Últimos 30 dias</Radio>
+          <Radio value={DateRange.BEGINNING}>Desde o início</Radio>
+        </Stack>
       </RadioGroup>
     </Box>
   )
