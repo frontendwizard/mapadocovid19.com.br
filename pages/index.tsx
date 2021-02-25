@@ -7,18 +7,12 @@ import PageHeader from '../components/PageHeader'
 import LastUpdateInfo from '../components/LastUpdateInfo'
 import BarChartByTime from '../components/BarChartByTime'
 import counties from '../utils/counties.json'
-import fetchAllReports, { Report, requestOptions } from '../utils/fetchAllReports'
+import fetchAllReports, { requestOptions } from '../utils/fetchAllReports'
 
 import topology from '../public/topologies/brazil.json'
-
-interface CountrySumReport {
-  date: string
-  deaths: number
-  confirmed: number
-  confirmedPer100k: number
-  newConfirmed: number
-  newDeaths: number
-}
+import { CountrySumReport, Report } from '../utils/types'
+import { totalSumByDay } from '../utils/filters';
+import { GetStaticProps } from 'next';
 
 interface HomeProps {
   lastReports: Report[]
@@ -100,31 +94,7 @@ export async function getStaticProps() {
   // ?Atualiza os recentes
   const lastReports = reports.filter(({ is_last: isLast }) => isLast)
   // ? Soma total diária do PAÍS
-  const countrySumByDay: CountrySumReport[] = reports
-    .reduce<CountrySumReport[]>((acc, item) => {
-      const index = acc.indexOf(acc.find((i) => i.date === item.date))
-      if (index >= 0) {
-        acc[index].deaths += item.last_available_deaths
-        acc[index].confirmed += item.last_available_confirmed
-        acc[index].confirmedPer100k +=
-          item.last_available_confirmed_per_100k_inhabitants
-        acc[index].newConfirmed += item.new_confirmed
-        acc[index].newDeaths += item.new_deaths
-      } else {
-        acc.push({
-          date: item.date,
-          deaths: item.last_available_deaths,
-          confirmed: item.last_available_confirmed,
-          confirmedPer100k: item.last_available_confirmed_per_100k_inhabitants,
-          newConfirmed: item.new_confirmed,
-          newDeaths: item.new_deaths,
-        })
-      }
-      return acc
-    }, [])
-    .sort((first, second) =>
-      compareAsc(new Date(first.date), new Date(second.date))
-    )
+  const countrySumByDay = totalSumByDay(reports)
   // ? Boletins por ESTADO
   const reportsByCounty = reports.reduce((acc, report) => {
     if (typeof acc[report.state] === 'object') {
@@ -139,7 +109,8 @@ export async function getStaticProps() {
     reports.find((report) => report.state === initials && !report.is_last)
   )
   const { tables } = await fetch(
-    `https://api.brasil.io/v1/dataset/covid19/` , requestOptions
+    `https://api.brasil.io/v1/dataset/covid19/`,
+    requestOptions
   ).then((r) => r.json())
 
   return {
