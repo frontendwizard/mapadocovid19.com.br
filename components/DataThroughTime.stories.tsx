@@ -1,6 +1,6 @@
 import * as React from 'react'
 import DataThroughTime from './DataThroughTime'
-import { theme, ThemeProvider } from '@chakra-ui/core'
+import { theme, ThemeProvider } from '@chakra-ui/react'
 
 import fetchAllReports from '../utils/fetchAllReports'
 

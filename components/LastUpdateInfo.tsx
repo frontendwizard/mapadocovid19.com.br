@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/core'
+import { Box, Text } from '@chakra-ui/react'
 import formatDistance from 'date-fns/formatDistance'
 import { pt } from 'date-fns/locale'
 

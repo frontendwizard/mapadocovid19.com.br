@@ -1,6 +1,6 @@
 import { SVGAttributes } from 'react'
 import Link from 'next/link'
-import { Box, BoxProps, Link as ChakraLink } from '@chakra-ui/core'
+import { Box, BoxProps, Link as ChakraLink } from '@chakra-ui/react'
 import GithubCorner from 'react-github-corner'
 
 type SvgBoxProps = BoxProps &

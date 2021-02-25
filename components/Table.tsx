@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Text, Box, Icon } from '@chakra-ui/core'
+import { Text, Box, Icon } from '@chakra-ui/react'
 import { useTable, useSortBy } from 'react-table'
 
 const Table = ({ columns, data }) => {

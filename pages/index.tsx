@@ -1,4 +1,4 @@
-import { Stack, Flex, Text, Box } from '@chakra-ui/core'
+import { Stack, Flex, Text, Box } from '@chakra-ui/react'
 import compareAsc from 'date-fns/compareAsc'
 
 import * as Country from '../components/Country'
@@ -7,7 +7,7 @@ import PageHeader from '../components/PageHeader'
 import LastUpdateInfo from '../components/LastUpdateInfo'
 import BarChartByTime from '../components/BarChartByTime'
 import counties from '../utils/counties.json'
-import fetchAllReports, { Report } from '../utils/fetchAllReports'
+import fetchAllReports, { Report, requestOptions } from '../utils/fetchAllReports'
 
 import topology from '../public/topologies/brazil.json'
 
@@ -95,8 +95,11 @@ const Home: React.SFC<HomeProps> = ({
 )
 
 export async function getStaticProps() {
+  // ?Busca todos os reports
   const reports = await fetchAllReports(`place_type=state`)
+  // ?Atualiza os recentes
   const lastReports = reports.filter(({ is_last: isLast }) => isLast)
+  // ? Soma total diária do PAÍS
   const countrySumByDay: CountrySumReport[] = reports
     .reduce<CountrySumReport[]>((acc, item) => {
       const index = acc.indexOf(acc.find((i) => i.date === item.date))
@@ -122,6 +125,7 @@ export async function getStaticProps() {
     .sort((first, second) =>
       compareAsc(new Date(first.date), new Date(second.date))
     )
+  // ? Boletins por ESTADO
   const reportsByCounty = reports.reduce((acc, report) => {
     if (typeof acc[report.state] === 'object') {
       acc[report.state].push(report)
@@ -130,11 +134,12 @@ export async function getStaticProps() {
     }
     return acc
   }, {})
+  // ? boletins Anteriores
   const previousReports = counties.map(({ initials }) =>
     reports.find((report) => report.state === initials && !report.is_last)
   )
   const { tables } = await fetch(
-    `https://brasil.io/api/dataset/covid19`
+    `https://api.brasil.io/v1/dataset/covid19/` , requestOptions
   ).then((r) => r.json())
 
   return {

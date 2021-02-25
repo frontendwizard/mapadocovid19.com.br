@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Stack, Box } from '@chakra-ui/core'
+import { Stack, Box } from '@chakra-ui/react'
 
 import DataThroughTime from '../DataThroughTime'
 

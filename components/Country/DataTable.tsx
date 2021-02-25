@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react'
-import { Text } from '@chakra-ui/core'
+import { Text } from '@chakra-ui/react'
 
 import Table from '../Table'
 import leadingSign from '../../utils/leadingSign'

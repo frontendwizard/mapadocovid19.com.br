@@ -9,7 +9,7 @@ import {
   StatHelpText,
   Icon,
   Stack,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
 import { scaleBand, scaleLinear } from '@vx/scale'
 import { Group } from '@vx/group'

@@ -1,4 +1,4 @@
-import { Link, Box, Text } from '@chakra-ui/core'
+import { Link, Box, Text } from '@chakra-ui/react'
 
 const Footer = () => (
   <Box color="gray.400" textAlign="center" mt={8}>

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Box, Heading, Stack } from '@chakra-ui/core'
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import { LinePath, Bar } from '@vx/shape'
 import { curveMonotoneX } from '@vx/curve'
 import { scaleTime, scaleLinear } from '@vx/scale'

@@ -1,4 +1,4 @@
-import { Heading, Text, Flex } from '@chakra-ui/core'
+import { Heading, Text, Flex } from '@chakra-ui/react'
 
 import leadingSign from '../utils/leadingSign'
 

@@ -1,4 +1,4 @@
-import { Stack, Flex, Heading, Text, Box } from '@chakra-ui/core'
+import { Stack, Flex, Heading, Text, Box } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import compareAsc from 'date-fns/compareAsc'
 

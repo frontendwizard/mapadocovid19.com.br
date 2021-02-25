@@ -11,7 +11,7 @@ import {
   Checkbox,
   ButtonProps,
   RadioProps,
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 
 import counties from '../../utils/counties.json'
 
