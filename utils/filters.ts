@@ -1,4 +1,4 @@
-import { Report, CountrySumReport } from './types'
+import { Report, CountrySumReport, lastAverageReports } from './types';
 import compareAsc from 'date-fns/compareAsc'
 
 export function totalSumByDay (reports: Report[]): CountrySumReport[] {
@@ -27,4 +27,8 @@ export function totalSumByDay (reports: Report[]): CountrySumReport[] {
     .sort((first, second) =>
       compareAsc(new Date(first.date), new Date(second.date))
     )
+}
+
+export function countiesVariation (reports: Report[]): lastAverageReports[] {
+  // Todo: calcular a média móvel dos últimos 7 dias e mapear em cores que indiquem variação no mapa 
 }

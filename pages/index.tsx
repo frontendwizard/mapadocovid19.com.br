@@ -12,6 +12,7 @@ import topology from '../public/topologies/brazil.json'
 import fetchAllReports, { requestOptions } from '../utils/fetchAllReports'
 import { CountrySumReport, Report } from '../utils/types'
 import { totalSumByDay } from '../utils/filters'
+import CustomMap from '../components/Country/CustomMap';
 
 interface HomeProps {
   lastReports: Report[]
@@ -43,7 +44,7 @@ const Home: React.FC<HomeProps> = ({
       </Flex>
       <Flex justify="center" align="center" wrap="wrap">
         <Box w={['100%', '100%', '45%']} mb={[4, 4, 0]} mr={[0, 0, 4]}>
-          <Country.Map results={lastReports} topology={topology} />
+          <Country.CustomMap results={lastReports} topology={topology} />
         </Box>
         <Box w={['100%', '100%', '50%']}>
           <Box mb="5">
@@ -93,6 +94,9 @@ export async function getStaticProps() {
   // ? Atualiza os recentes
   const lastReports = reports.filter(({ is_last: isLast }) => isLast)
   // ? Soma total diária do PAÍS
+
+  // Todo: Variável de casos/ mortes nos últimos dias
+  
   const countrySumByDay = totalSumByDay(reports)
   // ? Boletins por ESTADO
   const reportsByCounty = reports.reduce((acc, report) => {

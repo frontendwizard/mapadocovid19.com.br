@@ -27,3 +27,11 @@ export interface CountrySumReport {
   newConfirmed: number
   newDeaths: number
 }
+
+export interface lastAverageReports {
+  last_week_avg: number
+  oscilation: -1 | 0 | 1
+  oscilationPercent?: number
+  newConfirmedAvg: number
+  newDeathsAvg: number
+}
